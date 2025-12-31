@@ -1,0 +1,220 @@
+#!/usr/bin/env php
+<?php
+require __DIR__ . '/system/engine/Core/Bootstrap.php';
+
+use Engine\Core\Bootstrap;
+use Engine\Http\Router;
+
+$bootstrap = Bootstrap::init();
+
+$commands = [
+    'help' => function () {
+        echo "Runner commands:\n";
+        echo "  route:list       List all web routes\n";
+        echo "  make:controller  Create a controller (Usage: make:controller Name)\n";
+    },
+    'route:list' => function () use ($bootstrap) {
+        $router = new Router();
+        $webFile = $bootstrap['paths']['routesPath'] . DIRECTORY_SEPARATOR . 'web.php';
+        $apiFile = $bootstrap['paths']['routesPath'] . DIRECTORY_SEPARATOR . 'api.php';
+
+        if (is_file($webFile)) {
+            $r = $router; // for compatibility if route file uses $r
+            require $webFile;
+        }
+
+        if (is_file($apiFile)) {
+            $router->setPrefix('/api');
+            require $apiFile;
+            $router->setPrefix('');
+        }
+
+        $routes = $router->getRoutes();
+
+        echo str_pad("METHOD", 10) . str_pad("URI", 40) . "HANDLER\n";
+        echo str_repeat("-", 60) . "\n";
+
+        foreach ($routes as $route) {
+            $handler = is_array($route['handler'])
+                ? (is_string($route['handler'][0]) ? $route['handler'][0] : get_class($route['handler'][0])) . '@' . $route['handler'][1]
+                : 'Closure';
+            echo str_pad($route['method'], 10) . str_pad($route['path'], 40) . $handler . "\n";
+        }
+    },
+    'make:controller' => function ($name = null) use ($bootstrap) {
+        if (!$name) {
+            echo "Usage: make:controller Name\n";
+            return;
+        }
+        $class = preg_replace('/[^A-Za-z0-9_]/', '', $name);
+        $file = $bootstrap['paths']['root'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $class . '.php';
+        if (is_file($file)) {
+            echo "Controller already exists: $file\n";
+            return;
+        }
+        $code = "<?php\nnamespace App\\Controllers;\n\nuse Engine\\Support\\View;\n\nclass $class\n{\n    public function index(): string\n    {\n        \$view = new View(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Views');\n        return \$view->render(strtolower('$class'), ['title' => '$class', 'message' => 'Controller generated']);\n    }\n}\n";
+        if (!is_dir(dirname($file))) {
+            mkdir(dirname($file), 0777, true);
+        }
+        file_put_contents($file, $code);
+        echo "Created: $file\n";
+    },
+    'make:middleware' => function ($name = null) use ($bootstrap) {
+        if (!$name) {
+            echo "Usage: make:middleware Name\n";
+            return;
+        }
+        $class = preg_replace('/[^A-Za-z0-9_]/', '', $name);
+        $file = $bootstrap['paths']['root'] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Middleware' . DIRECTORY_SEPARATOR . $class . '.php';
+        if (is_file($file)) {
+            echo "Middleware already exists: $file\n";
+            return;
+        }
+        $code = "<?php\n\nnamespace App\\Middleware;\n\nuse Engine\\Middleware;\nuse Engine\\Request;\n\nclass $class implements Middleware\n{\n    public function handle(Request \$request, callable \$next)\n    {\n        // Pre-processing logic\n\n        \$response = \$next(\$request);\n\n        // Post-processing logic\n\n        return \$response;\n    }\n}\n";
+        if (!is_dir(dirname($file))) {
+            mkdir(dirname($file), 0755, true);
+        }
+        file_put_contents($file, $code);
+        echo "Created: $file\n";
+    },
+    'make:migration' => function ($name = null) use ($bootstrap) {
+        if (!$name) {
+            echo "Usage: make:migration Name\n";
+            return;
+        }
+
+        $timestamp = date('Y_m_d_His');
+        $filename = "{$timestamp}_{$name}";
+        $className = "Migration_" . $timestamp . "_" . $name;
+        $className = preg_replace('/[^a-zA-Z0-9_]/', '_', $className);
+
+        $content = <<<PHP
+<?php
+
+use Engine\Database\Migration;
+use Engine\Database\Schema\Blueprint;
+use Engine\Database\Schema\Schema;
+
+/**
+ * Migration: $name
+ * Created at: $timestamp
+ */
+class $className extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up(): void
+    {
+        // Example: Create 'users' table
+        // (new Schema(\$this->pdo))->createIfNotExists('users', function(Blueprint \$table) {
+        //     \$table->id();
+        //     \$table->string('name');
+        //     \$table->timestamps();
+        // });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down(): void
+    {
+        // Example: Drop 'users' table
+        // (new Schema(\$this->pdo))->dropIfExists('users');
+    }
+}
+PHP;
+
+        $dir = $bootstrap['paths']['root'] . "/database/migrations";
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        $path = "$dir/$filename.php";
+        file_put_contents($path, $content);
+        echo "Migration created: $path\n";
+    },
+    'migrate' => function () use ($bootstrap) {
+        echo "Running migrations...\n";
+        $dir = $bootstrap['paths']['root'] . "/database/migrations";
+        if (!is_dir($dir)) {
+            echo "No migrations found.\n";
+            return;
+        }
+
+        $pdo = \Engine\Database\DB::pdo();
+        $pdo->exec("CREATE TABLE IF NOT EXISTS migrations (id INTEGER PRIMARY KEY, migration TEXT, batch INTEGER)");
+
+        $stmt = $pdo->query("SELECT migration FROM migrations");
+        $ran = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        $files = glob("$dir/*.php");
+        foreach ($files as $file) {
+            $migration = basename($file, '.php');
+            if (in_array($migration, $ran)) {
+                continue;
+            }
+
+            require $file;
+
+            // Extract class name from filename: YYYY_MM_DD_His_name -> Migration_YYYY_MM_DD_His_name
+            // But the file content class definition might differ slightly if I didn't standardize.
+            // My make:migration uses Migration_{timestamp}_{name}
+            // Let's rely on the filename to derive class name or parse it.
+            // The template uses: $className = "Migration_" . $timestamp . "_" . $name;
+            // The filename is: {$timestamp}_{$name}.php
+            // So Class name is "Migration_" . basename($file, '.php')?
+            // Wait, filename is 2025_..._create_users_table.php
+            // Class is Migration_2025_..._create_users_table
+
+            $className = "Migration_" . $migration;
+
+            echo "Migrating: $migration\n";
+            $instance = new $className();
+            $instance->up();
+
+            $pdo->prepare("INSERT INTO migrations (migration, batch) VALUES (?, ?)")->execute([$migration, 1]);
+            echo "Migrated:  $migration\n";
+        }
+        echo "Done.\n";
+    },
+    'storage:link' => function () use ($bootstrap) {
+        $target = $bootstrap['paths']['root'] . '/storage/public';
+        $link = $bootstrap['paths']['root'] . '/public/storage';
+
+        if (file_exists($link)) {
+            echo "The \"public/storage\" link already exists.\n";
+            return;
+        }
+
+        if (!is_dir($target)) {
+            mkdir($target, 0755, true);
+        }
+
+        if (symlink($target, $link)) {
+            echo "The \"public/storage\" link has been connected to \"storage/public\".\n";
+        } else {
+            echo "The \"public/storage\" link could not be created.\n";
+        }
+    },
+];
+
+$argv = $_SERVER['argv'] ?? [];
+array_shift($argv); // drop script
+$cmd = $argv[0] ?? 'help';
+$args = array_slice($argv, 1);
+
+if (!isset($commands[$cmd])) {
+    echo "Unknown command: $cmd\n\n";
+    $commands['help']();
+    exit(1);
+}
+
+echo "Running $cmd...\n";
+echo "----------------\n";
+call_user_func_array($commands[$cmd], $args);
+echo "----------------\n";
+echo "Done.\n";
+
