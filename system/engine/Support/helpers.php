@@ -1,4 +1,5 @@
 <?php
+
 use Engine\Support\View;
 use Engine\Http\Middleware\CsrfMiddleware;
 use Engine\Core\Config;
@@ -10,7 +11,8 @@ use Engine\Core\Config;
  * @param mixed $default Default value
  * @return mixed
  */
-function config(string $key, mixed $default = null) {
+function config(string $key, mixed $default = null)
+{
     return Config::get($key, $default);
 }
 
@@ -21,7 +23,8 @@ function config(string $key, mixed $default = null) {
  * @param mixed $default Default value
  * @return mixed
  */
-function env(string $key, mixed $default = null) {
+function env(string $key, mixed $default = null)
+{
     return \Engine\Core\Env::get($key, $default);
 }
 
@@ -33,7 +36,8 @@ function env(string $key, mixed $default = null) {
  * @param string|null $layout Optional layout to wrap the view
  * @return string Rendered HTML
  */
-function view(string $name, array $data = [], ?string $layout = null) {
+function view(string $name, array $data = [], ?string $layout = null)
+{
     $base = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'views';
     $v = new View($base);
     $content = $v->render($name, $data);
@@ -145,7 +149,8 @@ function flash_get(string $key, $default = null)
  * @param string $path Target path
  * @return void
  */
-function redirect(string $path) {
+function redirect(string $path)
+{
     header("Location: $path");
     exit;
 }
@@ -169,7 +174,7 @@ function asset(string $path): string
  * @param string|null $path File path for URL generation, or null for class name
  * @return string|class-string
  */
-function storage(string $path = null)
+function storage(string $path = '')
 {
     if (is_null($path)) {
         return \Engine\Storage\Storage::class;
@@ -188,4 +193,74 @@ function storage_path(string $path = ''): string
     return \Engine\Storage\Storage::path($path);
 }
 
+if (!function_exists('dd')) {
+    function dd(...$args)
+    {
+        $styles = [
+            'pre' => 'background:#1e1e1e;color:#ecf0f1;padding:16px;border-radius:8px;font-size:14px;line-height:1.5;font-family:Menlo,Consolas,monospace;',
+            'string' => 'color:#2ecc71;',
+            'integer' => 'color:#3498db;',
+            'double' => 'color:#9b59b6;',
+            'boolean' => 'color:#e67e22;',
+            'NULL' => 'color:#95a5a6;',
+            'array' => 'color:#f1c40f;',
+            'object' => 'color:#e74c3c;',
+            'resource' => 'color:#1abc9c;',
+            'default' => 'color:#bdc3c7;',
+        ];
 
+        $output = "<pre style=\"{$styles['pre']}\">";
+
+        foreach ($args as $i => $arg) {
+            $output .= "\n<span style=\"color:#e74c3c;\">--- [dd #" . ($i + 1) . "] ---</span>\n";
+            $output .= parse_colored_var($arg, $styles) . "\n";
+        }
+
+        $output .= '</pre>';
+
+        if (function_exists('wp_die')) {
+            wp_die($output); // Proper WordPress termination
+        } else {
+            die($output);
+        }
+    }
+
+    function parse_colored_var($var, $styles, $depth = 0)
+    {
+        $indent = str_repeat('  ', $depth);
+        switch (gettype($var)) {
+            case 'string':
+                return "<span style=\"{$styles['string']}\">\"$var\"</span>";
+            case 'integer':
+                return "<span style=\"{$styles['integer']}\">$var</span>";
+            case 'double':
+                return "<span style=\"{$styles['double']}\">$var</span>";
+            case 'boolean':
+                return "<span style=\"{$styles['boolean']}\">" . ($var ? 'true' : 'false') . "</span>";
+            case 'NULL':
+                return "<span style=\"{$styles['NULL']}\">null</span>";
+            case 'array':
+                $result = "<span style=\"{$styles['array']}\">array</span> (\n";
+                foreach ($var as $key => $value) {
+                    $result .= $indent . "  [$key] => " . parse_colored_var($value, $styles, $depth + 1) . "\n";
+                }
+                return $result . $indent . ")";
+            case 'object':
+                $class = get_class($var);
+                $result = "<span style=\"{$styles['object']}\">object($class)</span> (\n";
+                foreach ((array) $var as $key => $value) {
+                    $result .= $indent . "  [$key] => " . parse_colored_var($value, $styles, $depth + 1) . "\n";
+                }
+                return $result . $indent . ")";
+            case 'resource':
+                return "<span style=\"{$styles['resource']}\">resource</span>";
+            default:
+                return "<span style=\"{$styles['default']}\">" . htmlspecialchars(print_r($var, true)) . "</span>";
+        }
+    }
+}
+
+function route(string $path): string
+{
+    return BASE_PATH . $path;
+}

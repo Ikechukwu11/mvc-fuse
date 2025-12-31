@@ -48,7 +48,7 @@ class Login extends Component
         if ($user && password_verify($this->password, $user->password)) {
             session_put('user_id', $user->id);
             // Redirect using the new redirect helper
-            $this->redirect('/fuse/profile');
+            $this->redirect(route('/fuse/profile'));
         } else {
             $this->message = 'Invalid credentials.';
         }

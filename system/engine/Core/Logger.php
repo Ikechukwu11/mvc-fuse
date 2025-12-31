@@ -1,9 +1,10 @@
 <?php
+
 namespace Engine\Core;
 
 /**
  * Class Logger
- * 
+ *
  * Simple file-based logger.
  * Writes logs to daily files in the specified directory.
  */
@@ -16,10 +17,10 @@ class Logger
 
     /**
      * Create a new Logger instance.
-     * 
+     *
      * @param string $dir Log directory path
      */
-    public function __construct(string $dir)
+    public function __construct(string $dir = __DIR__ . '/../../../storage/logs')
     {
         $this->dir = rtrim($dir, DIRECTORY_SEPARATOR);
         if (!is_dir($this->dir)) {
@@ -29,7 +30,7 @@ class Logger
 
     /**
      * Log a message with a specific level.
-     * 
+     *
      * @param string $level Log level (e.g., 'error', 'info')
      * @param string $message Log message
      * @param array $context Additional context data
@@ -50,28 +51,37 @@ class Logger
 
     /**
      * Log an error message.
-     * 
+     *
      * @param string $message
      * @param array $context
      * @return void
      */
-    public function error(string $message, array $context = []): void { $this->log('error', $message, $context); }
+    public function error(string $message, array $context = []): void
+    {
+        $this->log('error', $message, $context);
+    }
 
     /**
      * Log an info message.
-     * 
+     *
      * @param string $message
      * @param array $context
      * @return void
      */
-    public function info(string $message, array $context = []): void { $this->log('info', $message, $context); }
+    public function info(string $message, array $context = []): void
+    {
+        $this->log('info', $message, $context);
+    }
 
     /**
      * Log a debug message.
-     * 
+     *
      * @param string $message
      * @param array $context
      * @return void
      */
-    public function debug(string $message, array $context = []): void { $this->log('debug', $message, $context); }
+    public function debug(string $message, array $context = []): void
+    {
+        $this->log('debug', $message, $context);
+    }
 }

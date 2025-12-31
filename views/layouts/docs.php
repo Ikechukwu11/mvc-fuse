@@ -137,10 +137,15 @@
             window.history.replaceState({}, '', url.toString());
             // If hash exists after section change, scroll to it
             requestAnimationFrame(() => {
-                const { hash } = window.location;
+                const {
+                    hash
+                } = window.location;
                 if (hash) {
                     const el = document.querySelector(hash);
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (el) el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                     updateActiveAnchor();
                 }
             });
@@ -184,7 +189,8 @@
                 const el = document.querySelector(window.location.hash);
                 if (el) el.scrollIntoView({
                     behavior: 'smooth',
-                    block: 'start'
+                    block: "end",
+                    inline: "nearest"
                 });
             }
         });
@@ -194,7 +200,8 @@
             const el = document.querySelector(window.location.hash);
             if (el) el.scrollIntoView({
                 behavior: 'smooth',
-                block: 'start'
+                block: "end",
+                inline: "nearest"
             });
         });
     </script>

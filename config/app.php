@@ -4,7 +4,7 @@ $basePath = env('APP_BASE_PATH', '');
 if (isset($_SERVER['REQUEST_URI']) && $basePath !== '' && $basePath !== '/' && !str_starts_with($_SERVER['REQUEST_URI'], $basePath)) {
     $basePath = '';
 }
-
+define("BASE_PATH", "$basePath");
 return [
     'name' => env('APP_NAME', 'MVC'),
     'env' => env('APP_ENV', 'production'),

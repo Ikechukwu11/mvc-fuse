@@ -3,6 +3,7 @@
 namespace App\Fuse;
 
 use Engine\Fuse\Component;
+use Engine\Support\Paginator;
 
 /**
  * RandomUsers component renders a paginated list of users from in-memory data.
@@ -23,6 +24,9 @@ class RandomUsers extends Component
 
   /** @var int */
   public int $total = 0;
+
+  /** @var array */
+  public array $queryParams = [];
 
   /**
    * Initialize random user data.
@@ -47,8 +51,12 @@ class RandomUsers extends Component
     }
     $this->users = $users;
     $this->total = count($users);
+
+    // Capture initial query parameters to preserve context (e.g. section=pagination)
+    $this->queryParams = $_GET;
+
     // Initialize from URL query if present
-    $pageQ = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    $pageQ = isset($_GET['page']) ? (int) $_GET['page'] : $this->page;
     $perQ = isset($_GET['perPage']) ? (int) $_GET['perPage'] : 5;
     if ($pageQ < 1) $pageQ = 1;
     if ($perQ < 1) $perQ = 1;
@@ -56,6 +64,37 @@ class RandomUsers extends Component
     $this->perPage = $perQ;
     $this->page = min(max(1, $pageQ), $this->pages());
     $this->prevPerPage = $this->perPage;
+  }
+
+  /**
+   * Update perPage via explicit input action.
+   *
+   * @return void
+   */
+  public function updatePerPage()
+  {
+    $val = (int) $this->perPage;
+    if ($val < 1) $val = 1;
+    if ($val > 50) $val = 50;
+
+    // Calculate new page based on current offset
+    $firstItemIndex = ($this->page - 1) * $this->prevPerPage;
+
+    $this->perPage = $val;
+
+    // Calculate the new page number
+    $this->page = (int) floor($firstItemIndex / $this->perPage) + 1;
+    $this->prevPerPage = $this->perPage;
+
+    // Construct URL with preserved params
+    $params = $this->queryParams;
+    $params['page'] = $this->page;
+    $params['perPage'] = $this->perPage;
+
+    $url = '?' . http_build_query($params);
+
+    // Trigger SPA redirect/navigation
+    return $this->redirect($url, true);
   }
 
   /**
@@ -82,7 +121,7 @@ class RandomUsers extends Component
     // Ensure current page is within bounds after any updates
     $pages = $this->pages();
     if ($this->page < 1) $this->page = 1;
-    if ($this->page > $pages) $this->page = $pages;
+    if ($this->page > $pages && $pages !== null) $this->page = $pages;
   }
 
   /**
@@ -97,25 +136,6 @@ class RandomUsers extends Component
       'perPage' => $this->perPage,
     ]);
   }
-  /**
-   * Go to the previous page.
-   *
-   * @return void
-   */
-  public function pagePrev()
-  {
-    $this->page = max(1, $this->page - 1);
-  }
-
-  /**
-   * Go to the next page.
-   *
-   * @return void
-   */
-  public function pageNext()
-  {
-    $this->page = min($this->pages(), $this->page + 1);
-  }
 
   /**
    * Jump to a specific page.
@@ -128,14 +148,6 @@ class RandomUsers extends Component
     $p = max(1, min($this->pages(), $p));
     $this->page = $p;
   }
-
-  /**
-   * Update per-page size.
-   *
-   * @param int $n
-   * @return void
-   */
-  // setPerPage() no longer required; rendering() handles perPage normalization and reset
 
   /**
    * Total number of pages.
@@ -165,84 +177,14 @@ class RandomUsers extends Component
    */
   public function render()
   {
-    $rows = '';
-    $startSerial = ($this->page - 1) * $this->perPage + 1;
-    foreach ($this->currentSlice() as $i => $u) {
-      $serial = $startSerial + $i;
-      $rows .= "<tr><td>{$serial}</td><td>{$u['name']}</td><td>{$u['email']}</td><td>{$u['city']}</td></tr>";
-    }
+    $paginator = new Paginator(
+      $this->currentSlice(),
+      $this->total,
+      $this->perPage,
+      $this->page,
+      ['path' => '/docs', 'query' => $this->queryParams]
+    );
 
-    $pages = $this->pages();
-    $pageLinks = '';
-    $maxShow = min($pages, 8);
-    $start = max(1, $this->page - 3);
-    $end = min($pages, $start + $maxShow - 1);
-
-    $linkStyle = 'display:inline-block; padding:6px 10px; border:1px solid #e7e9f3; background:#fff; color:#333; text-decoration:none; border-radius:6px; margin-right:4px; cursor:pointer;';
-
-    // Base query params to preserve (e.g. section=pagination)
-    $baseParams = $_GET;
-    $baseParams['perPage'] = $this->perPage;
-
-    if ($start > 1) {
-      $baseParams['page'] = 1;
-      $url = '?' . http_build_query($baseParams);
-      $pageLinks .= "<a href=\"{$url}\" fuse:click.prevent=\"pageGo(1)\" style=\"{$linkStyle}\">1</a> <span>…</span> ";
-    }
-    for ($i = $start; $i <= $end; $i++) {
-      $active = $i === $this->page ? 'background:#e9edff; color:#1d2dd9; font-weight:600; border-color:#d0d7ff;' : '';
-      $baseParams['page'] = $i;
-      $url = '?' . http_build_query($baseParams);
-      $pageLinks .= "<a href=\"{$url}\" fuse:click.prevent=\"pageGo({$i})\" style=\"{$linkStyle} {$active}\">{$i}</a>";
-    }
-    if ($end < $pages) {
-      $baseParams['page'] = $pages;
-      $url = '?' . http_build_query($baseParams);
-      $pageLinks .= " <span>…</span> <a href=\"{$url}\" fuse:click.prevent=\"pageGo({$pages})\" style=\"{$linkStyle}\">{$pages}</a>";
-    }
-
-    $disabledPrev = $this->page <= 1 ? 'opacity:.5; pointer-events:none;' : '';
-    $disabledNext = $this->page >= $pages ? 'opacity:.5; pointer-events:none;' : '';
-
-    $prevPage = max(1, $this->page - 1);
-    $nextPage = min($pages, $this->page + 1);
-
-    $baseParams['page'] = $prevPage;
-    $prevUrl = '?' . http_build_query($baseParams);
-
-    $baseParams['page'] = $nextPage;
-    $nextUrl = '?' . http_build_query($baseParams);
-
-    return <<<HTML
-        <div style="border:1px solid #e7e9f3; border-radius:12px; overflow:hidden;">
-            <div style="display:flex; align-items:center; gap:10px; padding:10px; background:#f6f7ff;">
-                <label>Per page:
-                    <input type="number" min="1" max="50" value="{$this->perPage}"
-                           fuse:model.number="perPage"
-                           style="width:64px; padding:6px; border:1px solid #cfd3ff; border-radius:6px;">
-                </label>
-                <span style="margin-left:auto;">Page {$this->page} of {$pages}</span>
-            </div>
-            <table style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#eef2ff;">
-                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e7e9f3;">#</th>
-                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e7e9f3;">Name</th>
-                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e7e9f3;">Email</th>
-                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e7e9f3;">City</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {$rows}
-                </tbody>
-            </table>
-            <div style="display:flex; align-items:center; gap:8px; padding:10px; border-top:1px solid #e7e9f3;">
-                <a href="{$prevUrl}" fuse:click.prevent="pagePrev" style="{$linkStyle} {$disabledPrev}">Prev</a>
-                {$pageLinks}
-                <a href="{$nextUrl}" fuse:click.prevent="pageNext" style="{$linkStyle} {$disabledNext}">Next</a>
-                <span style="margin-left:auto;">Total: {$this->total}</span>
-            </div>
-        </div>
-HTML;
+    return view('fuse/random-users', ['paginator' => $paginator]);
   }
 }

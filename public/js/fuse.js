@@ -473,7 +473,6 @@ const Fuse = {
         if (spec === "model" || spec === "click" || spec === "submit") return;
 
         const rawAction = attr.value;
-        const { action, params } = this.parseAction(rawAction);
 
         const parts = spec.split(".");
         const eventName = parts[0];
@@ -496,6 +495,14 @@ const Fuse = {
               return;
             }
 
+            // Parse action at runtime and resolve params
+            const { action, params } = this.parseAction(rawAction);
+            const resolvedParams = params.map((p) => {
+              if (p === "$el.value") return node.value;
+              if (p === "$event.target.value") return e.target.value;
+              return p;
+            });
+
             // Debounce support: fuse:event.debounce.300
             let delay = 0;
             const debounceIndex = mods.indexOf("debounce");
@@ -508,10 +515,10 @@ const Fuse = {
             if (delay > 0) {
               clearTimeout(node.__fuseDebounceTimer);
               node.__fuseDebounceTimer = setTimeout(() => {
-                this.sendRequest(componentId, action, params, node);
+                this.sendRequest(componentId, action, resolvedParams, node);
               }, delay);
             } else {
-              this.sendRequest(componentId, action, params, node);
+              this.sendRequest(componentId, action, resolvedParams, node);
             }
           },
           options
