@@ -199,6 +199,33 @@ PHP;
             echo "The \"public/storage\" link could not be created.\n";
         }
     },
+    'native:install' => function () {
+        require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+        (new \Engine\Mobile\Manager())->install();
+    },
+    'native:build' => function () {
+        require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+        $manager = new \Engine\Mobile\Manager();
+        $manager->bundle();
+        $manager->build();
+    },
+    'native:serve' => function () {
+        require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+        $manager = new \Engine\Mobile\Manager();
+        $manager->bundle();
+        $manager->build();
+        $manager->launch();
+    },
+    'mobile:init' => function () use ($bootstrap) {
+        require_once __DIR__ . '/system/engine/Mobile/Installer.php';
+        $installer = new \Engine\Mobile\Installer($bootstrap['paths']['root']);
+        $installer->install();
+    },
+    'mobile:run' => function () use ($bootstrap) {
+        require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+        $manager = new \Engine\Mobile\Manager($bootstrap['paths']['root']);
+        $manager->run();
+    },
 ];
 
 $argv = $_SERVER['argv'] ?? [];

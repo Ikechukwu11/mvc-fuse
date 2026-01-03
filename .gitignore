@@ -2,3 +2,4 @@
 storage/logs/*
 storage/public/log/*
 storage/sessions/*
+native/*

@@ -161,7 +161,7 @@ class Kernel
         }
 
         $args = [];
-        
+
         foreach ($reflection->getParameters() as $param) {
             $name = $param->getName();
             $type = $param->getType();
@@ -181,7 +181,7 @@ class Kernel
             // Fallback for non-named params (if route didn't use named groups, which our Router does)
             // But just in case, or if we want to support order-based injection for closures
             // (though our Router ensures named params for routes defined with {param})
-            
+
             // Use default value if available
             if ($param->isDefaultValueAvailable()) {
                 $args[] = $param->getDefaultValue();
@@ -194,7 +194,7 @@ class Kernel
                 continue;
             }
 
-            // If we are here, we can't resolve the argument. 
+            // If we are here, we can't resolve the argument.
             // We could try to shift from $params if it has numeric keys, but Router filters them out.
             // Let's just pass null or let it fail naturally with a better error?
             // Throwing is better.
