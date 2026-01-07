@@ -123,7 +123,7 @@ class Manager
     {
         echo "=== Bundling Framework ===\n";
 
-        $bundleZipPath = $this->androidPath . '/app/src/main/assets/framework_bundle.zip';
+        $bundleZipPath = $this->androidPath . '/app/src/main/assets/app_bundle.zip';
 
         // 1. Prepare a temporary directory
         $tempDir = sys_get_temp_dir() . '/mvc_framework_build_' . time();
@@ -145,7 +145,9 @@ class Manager
             'storage',
             'tests',
             'vendor', // We will reinstall vendor
-            'framework_bundle.zip'
+            'app_bundle.zip',
+            'laravel_bundle.zip',
+            'system/engine/Mobile/resources'
         ];
 
         $this->recursiveCopy($this->rootPath, $tempDir, $exclusions);
@@ -249,13 +251,32 @@ class Manager
     {
         echo "=== Launching App ===\n";
 
-        $package = 'com.mvc.mobile';
-        $activity = 'com.mvc.mobile.MainActivity'; // Updated to correct activity
+        // Install the app first
+        $this->installApp();
+
+        $package = $this->getPackageName();
+        if (!$package) {
+            echo "Could not detect package name. Defaulting to com.mvc.mobile\n";
+            $package = 'com.mvc.mobile';
+        }
+
+        $activityName = $this->getLaunchableActivity();
+        if ($activityName) {
+            if (substr($activityName, 0, 1) === '.') {
+                $activity = $package . $activityName;
+            } elseif (strpos($activityName, '.') === false) {
+                $activity = $package . '.' . $activityName;
+            } else {
+                $activity = $activityName;
+            }
+        } else {
+            $activity = $package . '.MainActivity';
+        }
 
         $cmd = "adb shell am start -n $package/$activity";
         echo "Running: $cmd\n";
 
-        passthru($cmd, $returnVar);
+        $returnVar = $this->executeCommand($cmd);
 
         if ($returnVar !== 0) {
             echo "Launch failed. Is a device connected?\n";
@@ -265,22 +286,137 @@ class Manager
     }
 
     /**
-     * Helper to recursively copy directories.
+     * Install the APK to the connected device.
+     *
+     * @return void
      */
-    protected function recursiveCopy($src, $dst, $exclusions = [])
+    protected function installApp(): void
+    {
+        echo "Installing APK...\n";
+
+        $apkPath = $this->androidPath . '/app/build/outputs/apk/debug/app-debug.apk';
+
+        if (!file_exists($apkPath)) {
+            echo "Error: APK not found at $apkPath. Build might have failed.\n";
+            return;
+        }
+
+        $cmd = "adb install -r \"$apkPath\"";
+        echo "Running: $cmd\n";
+
+        $returnVar = $this->executeCommand($cmd);
+
+        if ($returnVar !== 0) {
+            echo "Installation failed.\n";
+        } else {
+            echo "APK installed successfully.\n";
+        }
+    }
+
+    /**
+     * Execute a shell command.
+     *
+     * @param string $cmd
+     * @return int
+     */
+    protected function executeCommand(string $cmd): int
+    {
+        passthru($cmd, $returnVar);
+        return $returnVar;
+    }
+
+    /**
+     * Get the launchable activity name from AndroidManifest.xml.
+     *
+     * @return string|null
+     */
+    protected function getLaunchableActivity(): ?string
+    {
+        $manifestFile = $this->androidPath . '/app/src/main/AndroidManifest.xml';
+        if (!file_exists($manifestFile)) {
+            return null;
+        }
+
+        $content = file_get_contents($manifestFile);
+
+        try {
+            $xml = simplexml_load_string($content);
+            if ($xml === false) return null;
+
+            $xml->registerXPathNamespace('android', 'http://schemas.android.com/apk/res/android');
+
+            // Find activity with MAIN action and LAUNCHER category
+            $activities = $xml->xpath('//application/activity[intent-filter/action[@android:name="android.intent.action.MAIN"] and intent-filter/category[@android:name="android.intent.category.LAUNCHER"]]');
+
+            if (!empty($activities)) {
+                $attributes = $activities[0]->attributes('android', true);
+                return (string)$attributes['name'];
+            }
+        } catch (\Exception $e) {
+            // Ignore XML errors
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the package name from the Android project.
+     *
+     * @return string|null
+     */
+    public function getPackageName(): ?string
+    {
+        $gradleFile = $this->androidPath . '/app/build.gradle.kts';
+        if (file_exists($gradleFile)) {
+            $content = file_get_contents($gradleFile);
+            if (preg_match('/applicationId\s*=\s*"([^"]+)"/', $content, $matches)) {
+                return $matches[1];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Helper to recursively copy directories.
+     *
+     * @param string $src Source directory path.
+     * @param string $dst Destination directory path.
+     * @param array $exclusions List of filenames to exclude.
+     * @return void
+     */
+    protected function recursiveCopy(string $src, string $dst, array $exclusions = []): void
     {
         $dir = opendir($src);
         if (!is_dir($dst)) mkdir($dst, 0777, true);
 
-        while (false !== ($file = readdir($dir))) {
-            if (($file != '.') && ($file != '..')) {
-                if (in_array($file, $exclusions)) continue;
+        $normalizedExclusions = array_map(function ($ex) {
+            return str_replace('\\', '/', rtrim($this->rootPath . '/' . $ex, '/'));
+        }, $exclusions);
 
-                if (is_dir($src . '/' . $file)) {
-                    $this->recursiveCopy($src . '/' . $file, $dst . '/' . $file, $exclusions);
-                } else {
-                    copy($src . '/' . $file, $dst . '/' . $file);
+        while (false !== ($file = readdir($dir))) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $current = $src . '/' . $file;
+            $currentNorm = str_replace('\\', '/', $current);
+
+            $basenameExcluded = in_array($file, $exclusions, true);
+            $pathExcluded = false;
+            foreach ($normalizedExclusions as $exAbs) {
+                if (str_starts_with($currentNorm, $exAbs)) {
+                    $pathExcluded = true;
+                    break;
                 }
+            }
+            if ($basenameExcluded || $pathExcluded) {
+                continue;
+            }
+
+            if (is_dir($current)) {
+                $this->recursiveCopy($current, $dst . '/' . $file, $exclusions);
+            } else {
+                copy($current, $dst . '/' . $file);
             }
         }
         closedir($dir);
@@ -288,8 +424,11 @@ class Manager
 
     /**
      * Helper to recursively delete directories.
+     *
+     * @param string $dir The directory to delete.
+     * @return void
      */
-    protected function recursiveDelete($dir)
+    protected function recursiveDelete(string $dir): void
     {
         if (!is_dir($dir)) return;
         $files = array_diff(scandir($dir), array('.', '..'));
@@ -301,10 +440,17 @@ class Manager
 
     /**
      * Helper to add directory to zip.
+     *
+     * @param ZipArchive $zip The ZipArchive instance.
+     * @param string $path The path to add.
+     * @param string $localPath The local path inside the zip.
+     * @return void
      */
     protected function addDirToZip(ZipArchive $zip, string $path, string $localPath): void
     {
         if (!is_dir($path)) return;
+
+        $basePath = realpath($path);
 
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS),
@@ -315,12 +461,12 @@ class Manager
             $filePath = $file->getRealPath();
 
             // Calculate relative path inside the zip
-            // $path is the temp root (e.g., /tmp/build)
-            // $filePath is /tmp/build/app/file.php
-            // We want app/file.php
+            $relativePath = substr($filePath, strlen($basePath));
+            $relativePath = ltrim(str_replace('\\', '/', $relativePath), '/');
 
-            $relativePath = substr($filePath, strlen($path) + 1);
-            $relativePath = str_replace('\\', '/', $relativePath);
+            if ($localPath !== '') {
+                $relativePath = $localPath . '/' . $relativePath;
+            }
 
             if ($file->isDir()) {
                 $zip->addEmptyDir($relativePath);

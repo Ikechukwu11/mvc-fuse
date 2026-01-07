@@ -216,15 +216,121 @@ PHP;
         $manager->build();
         $manager->launch();
     },
-    'mobile:init' => function () use ($bootstrap) {
+    'mobile:init' => function ($package = null, $name = null) use ($bootstrap) {
+        require_once __DIR__ . '/system/engine/Mobile/Installer.php';
+
+        if (!$package) {
+            echo "Enter Package Name (default: com.mvc.mobile): ";
+            $input = trim(fgets(STDIN));
+            $package = $input ?: 'com.mvc.mobile';
+        }
+
+        if (!$name) {
+             echo "Enter App Name (default: MVC Mobile): ";
+             $input = trim(fgets(STDIN));
+             $name = $input ?: 'MVC Mobile';
+        }
+
+        $installer = new \Engine\Mobile\Installer($bootstrap['paths']['root']);
+        $installer->install($package, $name);
+
+        // Generate Assets
+        require_once __DIR__ . '/system/engine/Mobile/AssetGenerator.php';
+        $assets = new \Engine\Mobile\AssetGenerator($bootstrap['paths']['root']);
+        $assets->generate($name);
+    },
+    'mobile:run-force' => function () use ($bootstrap) {
+        $androidPath = $bootstrap['paths']['root'] . '/native/android';
+
+        // 1. Get current config if exists
+        $package = 'com.mvc.mobile';
+        $name = 'MVC Mobile';
+
+        if (is_dir($androidPath)) {
+            require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+            $manager = new \Engine\Mobile\Manager($bootstrap['paths']['root']);
+
+            // Extract Package
+            $p = $manager->getPackageName();
+            if ($p) $package = $p;
+
+            // Extract App Name from strings.xml
+            $stringsXml = $androidPath . '/app/src/main/res/values/strings.xml';
+            if (file_exists($stringsXml)) {
+                $content = file_get_contents($stringsXml);
+                if (preg_match('/<string name="app_name">([^<]+)<\/string>/', $content, $matches)) {
+                    $name = htmlspecialchars_decode($matches[1]);
+                }
+            }
+
+            echo "Detected existing config - Package: $package, Name: $name\n";
+            echo "Removing existing Android project...\n";
+
+            // Delete folder
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                exec(sprintf("rd /s /q %s", escapeshellarg($androidPath)));
+            } else {
+                exec(sprintf("rm -rf %s", escapeshellarg($androidPath)));
+            }
+        } else {
+            echo "No existing Android project found. Initializing with defaults.\n";
+        }
+
+        // 2. Re-Initialize
         require_once __DIR__ . '/system/engine/Mobile/Installer.php';
         $installer = new \Engine\Mobile\Installer($bootstrap['paths']['root']);
-        $installer->install();
-    },
-    'mobile:run' => function () use ($bootstrap) {
+        $installer->install($package, $name);
+
+        // 3. Generate Assets
+        require_once __DIR__ . '/system/engine/Mobile/AssetGenerator.php';
+        $assets = new \Engine\Mobile\AssetGenerator($bootstrap['paths']['root']);
+        $assets->generate($name);
+
+        // 4. Run
         require_once __DIR__ . '/system/engine/Mobile/Manager.php';
         $manager = new \Engine\Mobile\Manager($bootstrap['paths']['root']);
-        $manager->run();
+        $manager->install(); // Installs libs
+        $manager->bundle();
+        $manager->build();
+        $manager->launch();
+    },
+    'mobile:run' => function () use ($bootstrap) {
+        $androidPath = $bootstrap['paths']['root'] . '/native/android';
+        if (!is_dir($androidPath)) {
+            echo "Error: Mobile project not initialized.\n";
+            echo "Please run 'php runner mobile:init' first.\n";
+            return;
+        }
+
+        // Get App Name for Asset Generation
+        $name = 'MVC Mobile';
+        $stringsXml = $androidPath . '/app/src/main/res/values/strings.xml';
+        if (file_exists($stringsXml)) {
+            $content = file_get_contents($stringsXml);
+            if (preg_match('/<string name="app_name">([^<]+)<\/string>/', $content, $matches)) {
+                $name = htmlspecialchars_decode($matches[1]);
+            }
+        }
+
+        // Generate Assets (Ensure latest changes are applied)
+        require_once __DIR__ . '/system/engine/Mobile/AssetGenerator.php';
+        $assets = new \Engine\Mobile\AssetGenerator($bootstrap['paths']['root']);
+        $assets->generate($name);
+
+        require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+        $manager = new \Engine\Mobile\Manager($bootstrap['paths']['root']);
+
+        // Ensure dependencies are installed
+        $manager->install();
+
+        // Bundle the framework
+        $manager->bundle();
+
+        // Build the APK
+        $manager->build();
+
+        // Launch on device
+        $manager->launch();
     },
 ];
 
@@ -241,7 +347,28 @@ if (!isset($commands[$cmd])) {
 
 echo "Running $cmd...\n";
 echo "----------------\n";
+
+// Capture output for mobile:run* commands
+$logFile = null;
+if (strpos($cmd, 'mobile:run') === 0) {
+    $logFile = $bootstrap['paths']['root'] . '/mobile_build.log';
+    file_put_contents($logFile, "=== Mobile Build Log - " . date('Y-m-d H:i:s') . " ===\n\n");
+
+    // Start buffering with a callback that writes to file AND returns content (for stdout)
+    ob_start(function ($buffer) use ($logFile) {
+        file_put_contents($logFile, $buffer, FILE_APPEND);
+        return $buffer;
+    }, 1); // Chunk size 1 to ensure real-time logging
+}
+
 call_user_func_array($commands[$cmd], $args);
+
+if ($logFile) {
+    ob_end_flush();
+    echo "\n----------------\n";
+    echo "Log saved to: mobile_build.log\n";
+}
+
 echo "----------------\n";
 echo "Done.\n";
 

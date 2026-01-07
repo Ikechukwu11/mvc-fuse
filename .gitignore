@@ -3,3 +3,5 @@ storage/logs/*
 storage/public/log/*
 storage/sessions/*
 native/*
+native copy/*
+mobile_build.log

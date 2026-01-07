@@ -3,12 +3,15 @@
 
 <p>
     <strong>Standard Web:</strong>
+    <a href="<?= route('/login') ?>" fuse:navigate>Login</a> |
+    <a href="<?= route('/register') ?>" fuse:navigate>Register</a> |
     <a href="<?= route('/profile') ?>">My Profile</a> |
     <a href="<?= route('/logout') ?>">Logout</a>
 </p>
 
 <p>
     <strong>Fuse (SPA):</strong>
+     <a href="<?= route('/docs') ?>" fuse:navigate>Docs</a>
     <a href="<?= route('/fuse-test') ?>" fuse:navigate>Test Page</a> |
     <a href="<?= route('/fuse/login') ?>" fuse:navigate>Login</a> |
     <a href="<?= route('/fuse/register') ?>" fuse:navigate>Register</a> |

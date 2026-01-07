@@ -18,12 +18,22 @@ class CsrfMiddleware implements Middleware
             return $next($request);
         }
 
-        $token = $_SESSION['_csrf'] ?? null;
+        $token = isset($_SESSION['_csrf']) ? $_SESSION['_csrf'] : null;
         $incoming = $request->header('X-CSRF-TOKEN') ?? $request->header('X-CSRF') ?? $request->body['_token'] ?? null;
+        var_dump([
+            'request' => $request,
+            'tokens' => [
+                $token,
+                $request->header('X-CSRF-TOKEN'),
+                $request->header('X-XSRF-TOKEN'),
+            ],
+            'Session' => $_SESSION
+        ]);
         if (!$token || !$incoming || !hash_equals((string)$token, (string)$incoming)) {
             $res = new Response();
             return $res->setStatus(419)->html('<h1>CSRF Token Mismatch</h1>', 419);
         }
+
         return $next($request);
     }
 

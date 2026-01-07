@@ -3,7 +3,7 @@ namespace Engine\Core;
 
 /**
  * Class Bootstrap
- * 
+ *
  * Bootstraps the application by loading the autoloader, environment variables,
  * configuration, and setting up the environment.
  */
@@ -11,7 +11,7 @@ class Bootstrap
 {
     /**
      * Initialize the application.
-     * 
+     *
      * - Loads Autoloader
      * - Loads Helpers
      * - Sets up directory paths
@@ -19,7 +19,7 @@ class Bootstrap
      * - Loads .env
      * - Loads Config
      * - Starts Session
-     * 
+     *
      * @return array Application context (paths, config, loader)
      */
     public static function init(): array
@@ -77,9 +77,9 @@ class Bootstrap
         ];
 
         date_default_timezone_set($config['app']['timezone'] ?? 'UTC');
-        
-        // Set session path to project storage to avoid permission issues with php -S vs Apache
-        $sessionPath = $storagePath . '/sessions';
+
+        // Set session path: prefer environment override (e.g., Mobile persisted storage), fallback to project storage
+        $sessionPath = getenv('SESSION_SAVE_PATH') ?: ($storagePath . '/sessions');
         if (!is_dir($sessionPath)) {
             @mkdir($sessionPath, 0777, true);
         }
@@ -87,7 +87,10 @@ class Bootstrap
             session_save_path($sessionPath);
         }
 
-        if (session_status() !== PHP_SESSION_ACTIVE) {
+        // Avoid sessions for static asset requests to prevent extra session files
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $isAsset = (bool) preg_match('#\.(css|js|png|jpg|jpeg|webp|gif|svg|ico|woff|woff2|ttf|eot|otf|json|pdf|txt|xml)$#i', $uri);
+        if (!$isAsset && session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
@@ -103,7 +106,7 @@ class Bootstrap
 
     /**
      * Load a configuration file with default fallbacks.
-     * 
+     *
      * @param string $file Path to config file
      * @param array $defaults Default values
      * @return array Merged configuration
