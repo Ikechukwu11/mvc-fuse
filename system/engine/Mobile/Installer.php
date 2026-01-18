@@ -94,7 +94,7 @@ class Installer
                 'REPLACE_MINIFY_ENABLED' => 'false',
                 'REPLACE_SHRINK_RESOURCES' => 'false',
                 'REPLACE_DEBUG_SYMBOLS' => 'FULL',
-                'REPLACEME' => 'DEBUG'
+                'REPLACEME' => '1.0.0'
             ];
 
             foreach ($replacements as $placeholder => $value) {

@@ -271,6 +271,8 @@ class WebViewManager(
                 // Inject safe area insets IMMEDIATELY when page starts loading
                 // This ensures CSS variables are available before DOM parsing
                 (context as? MainActivity)?.injectSafeAreaInsetsToWebView()
+                // Install native-event bridge as early as possible to avoid missed events on initial load
+                injectJavaScript(view)
             }
 
             /**
@@ -359,10 +361,26 @@ class WebViewManager(
 
             window.Native = Native;
 
+            // Flag to indicate native-event is being forwarded by injected bridge
+            window.__nativeEventForwarder = true;
+            // Buffer to store early native events until app listeners are ready
+            window.__nativeEventBuffer = window.__nativeEventBuffer || [];
+
             document.addEventListener("native-event", function (e) {
                 const eventName = e.detail.event;
                 const payload = e.detail.payload;
 
+                // Buffer the event for later flush by client when ready
+                try {
+                    window.__nativeEventBuffer.push({ name: eventName, detail: payload });
+                } catch (err) {}
+
+                // Forward to window listeners (Fuse components listen on window)
+                try {
+                    window.dispatchEvent(new CustomEvent(eventName, { detail: payload }));
+                } catch (err) {}
+
+                // Forward to Native listener registry for any direct subscribers
                 window.Native.dispatch(eventName, payload);
 
 
@@ -371,7 +389,26 @@ class WebViewManager(
             // Capture form submissions (event listener)
             document.addEventListener('submit', function(e) {
                 var form = e.target;
-                captureFormSubmission(form);
+
+                // Prevent default submission to ensure we capture data first
+                // and avoid race conditions with WebView interception
+                if (!form.getAttribute('data-processed')) {
+                    e.preventDefault();
+                    console.log('📝 Intercepting form submission for bridge capture');
+
+                    captureFormSubmission(form);
+
+                    // Mark as processed
+                    form.setAttribute('data-processed', 'true');
+
+                    // Small delay to ensure bridge receives data before network request starts
+                    setTimeout(function() {
+                        console.log('🚀 Resuming form submission');
+                        form.submit();
+                        // Reset after submit (though page usually navigates away)
+                        setTimeout(function() { form.removeAttribute('data-processed'); }, 1000);
+                    }, 100);
+                }
             });
 
             // Capture programmatic form.submit()
@@ -389,10 +426,10 @@ class WebViewManager(
                     for (var pair of formData.entries()) {
                         urlEncodedData.append(pair[0], pair[1]);
                     }
-                    
+
                     // Handle action (resolve relative to absolute if needed, or let bridge handle it)
                     var action = form.action || window.location.href;
-                    
+
                     AndroidPOST.logPostData(urlEncodedData.toString(), action, "Content-Type: application/x-www-form-urlencoded");
                 }
             }
@@ -508,7 +545,8 @@ class JSBridge(private val phpBridge: PHPBridge, private val TAG: String) {
     fun logPostData(data: String, url: String, headers: String) {
         // Store using the URL as key
         Log.d("$TAG-JS", "📦 Captured POST data for: $url")
-        phpBridge.storeRequestData(url, data)
+        // Pass headers to bridge so they can be merged in PHPWebViewClient
+        phpBridge.storeRequestData(url, data, headers)
     }
 
     @JavascriptInterface

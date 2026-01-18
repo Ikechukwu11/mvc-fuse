@@ -1,0 +1,237 @@
+01-08 11:30:43.678 D/PHPMonitor-JS( 3122): 📦 Captured POST data for: /fuse/update
+01-08 11:30:43.678 D/PHPBridge( 3122): 🔑 Stored request data for URL: /fuse/update (length=406)
+01-08 11:30:43.682 D/PHPMonitor( 3122): 🔄 Intercepting POST request to http://127.0.0.1/fuse/update
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 Origin: http://127.0.0.1
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-mobile: ?1
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 Accept: */*
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 X-CSRF-TOKEN: 6824dfecc9dba83a5e775b974625427a8106e13f
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-platform: "Android"
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 User-Agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 Referer: http://127.0.0.1/music
+01-08 11:30:43.682 D/PHPMonitor-Headers( 3122): 📋 Content-Type: application/json
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122): Sending request from WebView:
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Type: HTML
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   URL: http://127.0.0.1/fuse/update
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Method: POST
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Body:
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Headers:
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        referer: http://127.0.0.1/music
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        sec-ch-ua-mobile: ?1
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        cookie: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        origin: http://127.0.0.1
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        sec-ch-ua-platform: "Android"
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        x-csrf-token: 6824dfecc9dba83a5e775b974625427a8106e13f
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        content-type: application/json
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        accept: */*
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):        user-agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Trace:
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Encoding type (form submissions only): null
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Is for main frame? false
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Is redirect? false
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):   Has gesture? true
+01-08 11:30:43.684 I/RequestInspectorWebView( 3122):
+01-08 11:30:43.685 D/PHPMonitor( 3122): 🌐 Handling PHP request
+01-08 11:30:43.685 D/MobileCookies( 3122): 📤 Cookie header: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.685 D/MobileCookies( 3122): 📦 Stored cookies:
+01-08 11:30:43.685 D/MobileCookies( 3122):    → PHPSESSID = 26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.685 D/PHPRequestHandler( 3122): 📤 Final request headers: {Origin=http://127.0.0.1, Cookie=PHPSESSID=26067d9fca7247048e42a743d4c3e69d, sec-ch-ua="Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24", sec-ch-ua-mobile=?1, Accept=*/*, X-CSRF-TOKEN=6824dfecc9dba83a5e775b974625427a8106e13f, sec-ch-ua-platform="Android", User-Agent=Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36, Referer=http://127.0.0.1/music, Content-Type=application/json}
+01-08 11:30:43.687 D/MobileCookies( 3122): 📤 Cookie header: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.687 D/PHPBridge( 3122): 🍪 Sent HTTP_COOKIE to native: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.687 I/PHP-Native( 3122): PHP already initialized
+01-08 11:30:43.687 I/PHP-Native( 3122): ⚠️ No QUERY_STRING found in URI
+01-08 11:30:43.688 I/PHP-Native( 3122): 🛠️ Starting PHP request startup
+01-08 11:30:43.688 I/PHP-Native( 3122): 🐛 initialize_php_with_request called with method=POST uri=/fuse/update ct=application/json\nX-CSRF-TOKEN: 6824dfecc9dba83a5e775b974625427a8106e13f\n
+01-08 11:30:43.688 I/PHP-Native( 3122): 🍪 Pre-set SG(request_info).cookie_data: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.688 I/PHP-Native( 3122): 📤 SAPI header: X-Powered-By: PHP/8.4.15
+01-08 11:30:43.688 I/PHP-Native( 3122): ✅ php_request_startup() completed
+01-08 11:30:43.688 I/PHP-Native( 3122): ✅ $_SERVER populated
+01-08 11:30:43.688 I/PHP-Native( 3122): ✅ $_COOKIE manually populated from HTTP_COOKIE
+01-08 11:30:43.688 I/PHP-Native( 3122): 🌀 Setting up memory output stream
+01-08 11:30:43.688 I/PHP-Native( 3122): ✅ STDOUT memory stream ready
+01-08 11:30:43.688 I/PHP-Native( 3122): 📮 Detected POST request
+01-08 11:30:43.688 I/PHP-Native( 3122): 📦 POST body length: 406
+01-08 11:30:43.688 I/PHP-Native( 3122): ✅ Parsed POST form data into $_POST
+01-08 11:30:43.691 I/PHP-Native( 3122): 📤 SAPI header: Expires: Thu, 19 Nov 1981 08:52:00 GMT
+01-08 11:30:43.691 I/PHP-Native( 3122): 📤 SAPI header: Cache-Control: no-store, no-cache, must-revalidate
+01-08 11:30:43.691 I/PHP-Native( 3122): 📤 SAPI header: Pragma: no-cache
+01-08 11:30:43.702 I/PHP-Native( 3122): 📤 SAPI header: Content-Type: application/json
+01-08 11:30:43.702 I/PHP-Native( 3122): ✅ PHP script finished executing
+01-08 11:30:43.702 D/PHPBridge( 3122): 🔍 Response first 200 chars: HTTP/1.1 200 OK
+01-08 11:30:43.702 D/PHPBridge( 3122): X-Powered-By: PHP/8.4.15
+01-08 11:30:43.702 D/PHPBridge( 3122): Expires: Thu, 19 Nov 1981 08:52:00 GMT
+01-08 11:30:43.702 D/PHPBridge( 3122): Cache-Control: no-store, no-cache, must-revalidate
+01-08 11:30:43.702 D/PHPBridge( 3122): Pragma: no-cache
+01-08 11:30:43.702 D/PHPBridge( 3122): Content-Type: application/json
+01-08 11:30:43.702 D/PHPBridge( 3122):
+01-08 11:30:43.702 D/PHPBridge( 3122): {"html":"<div
+01-08 11:30:43.705 D/PHPBridge( 3122): ⚠️ No Set-Cookie headers found in the response
+01-08 11:30:43.705 D/PerfTiming( 3122): ⏱️ BRIDGE [/fuse/update] prep=1ms jni=15ms process=3ms
+01-08 11:30:43.705 D/PerfTiming( 3122): ⏱️ BRIDGE_TOTAL [/fuse/update] 19ms
+01-08 11:30:43.706 D/PHPRequestHandler( 3122): 📋 Parsed status code: 200
+01-08 11:30:43.712 D/MobileCookies( 3122): 📦 Stored cookies:
+01-08 11:30:43.713 D/MobileCookies( 3122):    → PHPSESSID = 26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:43.713 D/PerfTiming( 3122): ⏱️ WEBCLIENT [/fuse/update] prep=1ms php=20ms parse=7ms
+01-08 11:30:43.720 D/PHPMonitor-Console( 3122): ⚡ Dispatching Native Event (Attempt 1): App.ReadStorageFile [object Object] -- From line 774
+01-08 11:30:43.721 D/AndroidBridge( 3122): ⚡ dispatch() called: App.ReadStorageFile, {"path":"music/library.json"}
+01-08 11:30:43.792 D/NativeActionCoordinator( 3122): 📢 Static dispatch event: App.StorageFileRead
+01-08 11:30:43.792 D/JSFUNC  ( 3122): native:App.StorageFileRead
+01-08 11:30:43.795 D/JSFUNC  ( 3122): {"path":"music\/library.json","content":"[{\"id\":1000006101,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006101\",\"title\":\"Fast Money Fast Cars Ft. Wizkid | tooxclusive.com\",\"artist\":\"M.I.\",\"album\":\"@tooxclusive_com\",\"duration\":262588,\"dateAdded\":1766483817,\"artwork_file\":\"app\\\/music\\\/art\\\/1000006101.jpg\",\"artwork_uri\":\"file:\\\/\\\/\\\/data\\\/user\\\/0\\\/com.mvc.mobile\\\/app_storage\\\/persisted_data\\\/storage\\\/app\\\/music\\\/art\\\/1000006101.jpg\"},{\"id\":1000006105,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006105\",\"title\":\"TOOFAN-Come on Man!!! (CLIP OFFICIEL.2012)\",\"artist\":\"<unknown>\",\"album\":\"Epsxe\",\"duration\":231158,\"dateAdded\":1766483817,\"artwork_file\":\"\",\"artwork_uri\":\"\"},{\"id\":1000006110,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006110\",\"title\":\"Mozart - Lacrimosa (Free Download) [Mpgun.com]\",\"artist\":\"<unknown>\",\"album\":\"Epsxe\",\"duration\":31321,\"dateAdded\":1766483817,\"artwork_file\":\"\",\"artwork_uri\":\"\"},{\"id\":1000006113,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006113\",\"title\":\"Toofan -  OROBO  (Official HD)\",\"artist\":\"<unknown>\",\"album\":\"Epsxe\",\"duration\":200255,\"dateAdded\":1766483817,\"artwork_file\":\"\",\"artwork_uri\":\"\"},{\"id\":1000005998,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000005998\",\"title\":\"GotInstrumentals.com\",\"artist\":\"<unknown>\",\"album\":\"Download\",\"duration\":189100,\"dateAdded\":1766483816,\"artwork_file\":\"app\\\/music\\\/art\\\/1000005998.jpg\",\"artwork_uri\":\"file:\\\/\\\/\\\/data\\\/user\\\/0\\\/com.mvc.mobile\\\/app_storage\\\/persisted_data\\\/storage\\\/app\\\/music\\\/art\\\/1000005998.jpg\"},{\"id\":1000005999,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000005999\",\"title\":\"7 Rings || illuminaija.com\",\"artist\":\"Ariana Grande - (INSTAGRAM: @illuminaija)\",\"album\":\"illuminaija.com\",\"duration\":178712,\"dateAdded\":1766483816,\"artwork_file\":\"app\\\/music\\\/art\\\/1000005999.jpg\",\"artwork_uri\":\"file:\\\/\\\/\\\/data\\\/user\\\/0\\\/com.mvc.mobile\\\/app_storage\\\/persisted_data\\\/storage\\\/app\\\/music\\\/art\\\/1000005999.jpg\"},{\"id\":1000006000,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006000\",\"title\":\"astronomiaremix\",\"artist\":\"<unknown>\",\"album\":\"Download\",\"duration\":41216,\"dateAdded\":1766483816,\"artwork_file\":\"\",\"artwork_uri\":\"\"},{\"id\":1000006004,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006004\",\"title\":\"Middle Child | Quickloaded.com\",\"artist\":\"J. Cole – Quickloaded.com\",\"album\":\"Quickloaded.com\",\"duration\":213629,\"dateAdded\":1766483816,\"artwork_file\":\"app\\\/music\\\/art\\\/1000006004.jpg\",\"artwork_uri\":\"file:\\\/\\\/\\\/data\\\/user\\\/0\\\/com.mvc.mobile\\\/app_storage\\\/persisted_data\\\/storage\\\/app\\\/music\\\/art\\\/1000006004.jpg\"},{\"id\":1000006005,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006005\",\"title\":\"GotInstrumentals.com\",\"artist\":\"<unknown>\",\"album\":\"Download\",\"duration\":125283,\"dateAdded\":1766483816,\"artwork_file\":\"app\\\/music\\\/art\\\/1000006005.jpg\",\"artwork_uri\":\"file:\\\/\\\/\\\/data\\\/user\\\/0\\\/com.mvc.mobile\\\/app_storage\\\/persisted_data\\\/storage\\\/app\\\/music\\\/art\\\/1000006005.jpg\"},{\"id\":1000006006,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006006\",\"title\":\"kf-theme\",\"artist\":\"<unknown>\",\"album\":\"Download\",\"duration\":31325,\"dateAdded\":1766483816,\"artwork_file\":\"\",\"artwork_uri\":\"\"},{\"id\":1000006008,\"uri\":\"content:\\\/\\\/media\\\/external\\\/audio\\\/media\\\/1000006008\",\"title\":\"GotInstrumentals.com\",\"artist\":\"<unknown>\",\"album\":\"Download\",\"duration\":105091,\"dateAdded\":1766483816,\"artwork_file\":\"app\\\/music\\\/art\\\/1000006008.jpg\",\"artwork_uri\":\"file:\\\/\\\/\
+01-08 11:30:43.804 D/AndroidBridge( 3122): ⚡ dispatch() called: Media.StopStatusUpdates, []
+01-08 11:30:43.820 D/PHPMonitor( 3122): 🔄 Intercepting GET request to https://via.placeholder.com/300
+01-08 11:30:43.820 D/PHPMonitor-Headers( 3122): 📋 User-Agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:43.820 D/PHPMonitor-Headers( 3122): 📋 Referer: http://127.0.0.1/
+01-08 11:30:43.820 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:43.820 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-mobile: ?1
+01-08 11:30:43.820 D/PHPMonitor-Headers( 3122): 📋 Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+01-08 11:30:43.820 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-platform: "Android"
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122): Sending request from WebView:
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Type: HTML
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   URL: https://via.placeholder.com/300
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Method: GET
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Body:
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Headers:
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        referer: http://127.0.0.1/
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        sec-ch-ua-mobile: ?1
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        cookie:
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        sec-ch-ua-platform: "Android"
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        user-agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):        accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Trace:
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Encoding type (form submissions only): null
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Is for main frame? false
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Is redirect? false
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):   Has gesture? true
+01-08 11:30:43.821 I/RequestInspectorWebView( 3122):
+01-08 11:30:43.821 D/PHPMonitor( 3122): 📡 External resource - passing to system: https://via.placeholder.com/300
+01-08 11:30:43.895 I/com.mvc.mobile( 3122): Background concurrent mark compact GC freed 12MB AllocSpace bytes, 47(24MB) LOS objects, 75% free, 12MB/48MB, paused 693us,4.658ms total 104.262ms
+01-08 11:30:43.978 D/NativeActionCoordinator( 3122): 📢 Dispatching JS event: App.StorageFileRead
+01-08 11:30:43.980 D/PHPMonitor-Console( 3122): ⚡ Dispatching Native Event (Attempt 1): Media.StopStatusUpdates  -- From line 774
+01-08 11:30:43.999 D/PHPMonitor-JS( 3122): 📦 Captured POST data for: /_native/api/events
+01-08 11:30:43.999 D/PHPBridge( 3122): 🔑 Stored request data for URL: /_native/api/events (length=474259)
+01-08 11:30:44.011 D/PHPMonitor( 3122): 🔄 Intercepting POST request to http://127.0.0.1/_native/api/events
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 Origin: http://127.0.0.1
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-mobile: ?1
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 X-Requested-With: XMLHttpRequest
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 Accept: */*
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-platform: "Android"
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 User-Agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 Referer: http://127.0.0.1/music
+01-08 11:30:44.011 D/PHPMonitor-Headers( 3122): 📋 Content-Type: application/json
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122): Sending request from WebView:
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Type: HTML
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   URL: http://127.0.0.1/_native/api/events
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Method: POST
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Body:
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Headers:
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        referer: http://127.0.0.1/music
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        sec-ch-ua-mobile: ?1
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        cookie: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        origin: http://127.0.0.1
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        sec-ch-ua-platform: "Android"
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        x-requested-with: XMLHttpRequest
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        content-type: application/json
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        accept: */*
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):        user-agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Trace:
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Encoding type (form submissions only): null
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Is for main frame? false
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Is redirect? false
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):   Has gesture? true
+01-08 11:30:44.012 I/RequestInspectorWebView( 3122):
+01-08 11:30:44.012 D/PHPMonitor( 3122): 🌐 Handling PHP request
+01-08 11:30:44.012 D/MobileCookies( 3122): 📤 Cookie header: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.012 D/MobileCookies( 3122): 📦 Stored cookies:
+01-08 11:30:44.012 D/MobileCookies( 3122):    → PHPSESSID = 26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.012 D/PHPRequestHandler( 3122): 📤 Final request headers: {Origin=http://127.0.0.1, Cookie=PHPSESSID=26067d9fca7247048e42a743d4c3e69d, sec-ch-ua="Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24", sec-ch-ua-mobile=?1, X-Requested-With=XMLHttpRequest, Accept=*/*, sec-ch-ua-platform="Android", User-Agent=Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36, Referer=http://127.0.0.1/music, Content-Type=application/json}
+01-08 11:30:44.013 D/MobileCookies( 3122): 📤 Cookie header: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.013 D/PHPBridge( 3122): 🍪 Sent HTTP_COOKIE to native: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.013 I/PHP-Native( 3122): PHP already initialized
+01-08 11:30:44.016 I/PHP-Native( 3122): ⚠️ No QUERY_STRING found in URI
+01-08 11:30:44.016 I/PHP-Native( 3122): 🛠️ Starting PHP request startup
+01-08 11:30:44.016 I/PHP-Native( 3122): 🐛 initialize_php_with_request called with method=POST uri=/_native/api/events ct=application/json\nX-Requested-With: XMLHttpRequest\n
+01-08 11:30:44.016 I/PHP-Native( 3122): 🍪 Pre-set SG(request_info).cookie_data: PHPSESSID=26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.016 I/PHP-Native( 3122): 📤 SAPI header: X-Powered-By: PHP/8.4.15
+01-08 11:30:44.016 I/PHP-Native( 3122): ✅ php_request_startup() completed
+01-08 11:30:44.016 I/PHP-Native( 3122): ✅ $_SERVER populated
+01-08 11:30:44.016 I/PHP-Native( 3122): ✅ $_COOKIE manually populated from HTTP_COOKIE
+01-08 11:30:44.016 I/PHP-Native( 3122): 🌀 Setting up memory output stream
+01-08 11:30:44.016 I/PHP-Native( 3122): ✅ STDOUT memory stream ready
+01-08 11:30:44.016 I/PHP-Native( 3122): 📮 Detected POST request
+01-08 11:30:44.016 I/PHP-Native( 3122): 📦 POST body length: 478196
+01-08 11:30:44.016 I/PHP-Native( 3122): ✅ Parsed POST form data into $_POST
+01-08 11:30:44.018 I/PHP-Native( 3122): 📤 SAPI header: Expires: Thu, 19 Nov 1981 08:52:00 GMT
+01-08 11:30:44.018 I/PHP-Native( 3122): 📤 SAPI header: Cache-Control: no-store, no-cache, must-revalidate
+01-08 11:30:44.018 I/PHP-Native( 3122): 📤 SAPI header: Pragma: no-cache
+01-08 11:30:44.021 I/PHP-Native( 3122): ✅ PHP script finished executing
+01-08 11:30:44.021 D/PHPBridge( 3122): 🔍 Response first 200 chars: HTTP/1.1 200 OK
+01-08 11:30:44.021 D/PHPBridge( 3122): X-Powered-By: PHP/8.4.15
+01-08 11:30:44.021 D/PHPBridge( 3122): Expires: Thu, 19 Nov 1981 08:52:00 GMT
+01-08 11:30:44.021 D/PHPBridge( 3122): Cache-Control: no-store, no-cache, must-revalidate
+01-08 11:30:44.021 D/PHPBridge( 3122): Pragma: no-cache
+01-08 11:30:44.021 D/PHPBridge( 3122):
+01-08 11:30:44.021 D/PHPBridge( 3122): 404 Not Found
+01-08 11:30:44.022 D/PHPBridge( 3122): ⚠️ No Set-Cookie headers found in the response
+01-08 11:30:44.022 D/PerfTiming( 3122): ⏱️ BRIDGE [/_native/api/events] prep=0ms jni=8ms process=1ms
+01-08 11:30:44.022 D/PerfTiming( 3122): ⏱️ BRIDGE_TOTAL [/_native/api/events] 10ms
+01-08 11:30:44.022 D/PHPRequestHandler( 3122): 📋 Parsed status code: 200
+01-08 11:30:44.024 D/MobileCookies( 3122): 📦 Stored cookies:
+01-08 11:30:44.024 D/MobileCookies( 3122):    → PHPSESSID = 26067d9fca7247048e42a743d4c3e69d
+01-08 11:30:44.024 D/PerfTiming( 3122): ⏱️ WEBCLIENT [/_native/api/events] prep=0ms php=10ms parse=2ms
+01-08 11:30:44.028 D/PHPMonitor-Console( 3122): API Event Dispatch Error: Unexpected non-whitespace character after JSON at position 4 (line 1 column 5) -- From line 30
+01-08 11:30:47.176 D/PHPMonitor( 3122): 🔄 Intercepting GET request to https://via.placeholder.com/64
+01-08 11:30:47.176 D/PHPMonitor-Headers( 3122): 📋 User-Agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:47.177 D/PHPMonitor-Headers( 3122): 📋 Referer: http://127.0.0.1/
+01-08 11:30:47.177 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:47.177 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-mobile: ?1
+01-08 11:30:47.177 D/PHPMonitor-Headers( 3122): 📋 Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+01-08 11:30:47.177 D/PHPMonitor-Headers( 3122): 📋 sec-ch-ua-platform: "Android"
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122): Sending request from WebView:
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Type: HTML
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   URL: https://via.placeholder.com/64
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Method: GET
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Body:
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Headers:
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        referer: http://127.0.0.1/
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        sec-ch-ua: "Android WebView";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        sec-ch-ua-mobile: ?1
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        cookie:
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        sec-ch-ua-platform: "Android"
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        user-agent: Mozilla/5.0 (Linux; Android 16; Redmi K30 Build/BP2A.250805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/143.0.7499.146 Mobile Safari/537.36
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):        accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Trace:
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Encoding type (form submissions only): null
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Is for main frame? false
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Is redirect? false
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):   Has gesture? true
+01-08 11:30:47.178 I/RequestInspectorWebView( 3122):
+01-08 11:30:47.178 D/PHPMonitor( 3122): 📡 External resource - passing to system: https://via.placeholder.com/64
+
+
+01-08 11:35:02.967 D/PHPMonitor( 3122): 🔄 Intercepting GET request to https://via.placeholder.com/64
+01-08 11:35:02.969 D/PHPMonitor( 3122): 📡 External resource - passing to system: https://via.placeholder.com/64
+01-08 11:35:11.060 D/PHPMonitor( 3122): 🔄 Intercepting GET request to https://via.placeholder.com/64
+01-08 11:35:11.062 D/PHPMonitor( 3122): 📡 External resource - passing to system: https://via.placeholder.com/64
+01-08 11:35:14.376 D/PHPMonitor-JS( 3122): 📦 Captured POST data for: /fuse/update
+01-08 11:35:14.380 D/PHPMonitor( 3122): 🔄 Intercepting POST request to http://127.0.0.1/fuse/update
+01-08 11:35:14.383 D/PHPMonitor( 3122): 🌐 Handling PHP request
+01-08 11:35:14.418 D/PHPMonitor-Console( 3122): ⚡ Dispatching Native Event (Attempt 1): App.ReadStorageFile [object Object] -- From line 774
+01-08 11:35:14.418 D/AndroidBridge( 3122): ⚡ dispatch() called: App.ReadStorageFile, {"path":"music/library.json"}
+01-08 11:35:14.477 D/NativeActionCoordinator( 3122): 📢 Static dispatch event: App.StorageFileRead
+01-08 11:35:14.477 D/AndroidBridge( 3122): ⚡ dispatch() called: Media.StopStatusUpdates, []
+01-08 11:35:14.482 D/PHPMonitor( 3122): 🔄 Intercepting GET request to https://via.placeholder.com/300
+01-08 11:35:14.483 D/PHPMonitor( 3122): 📡 External resource - passing to system: https://via.placeholder.com/300
+01-08 11:35:14.642 D/NativeActionCoordinator( 3122): 📢 Dispatching JS event: App.StorageFileRead
+01-08 11:35:14.644 D/PHPMonitor-Console( 3122): ⚡ Dispatching Native Event (Attempt 1): Media.StopStatusUpdates  -- From line 774
+01-08 11:35:14.666 D/PHPMonitor-JS( 3122): 📦 Captured POST data for: /_native/api/events
+01-08 11:35:14.679 D/PHPMonitor( 3122): 🔄 Intercepting POST request to http://127.0.0.1/_native/api/events
+01-08 11:35:14.681 D/PHPMonitor( 3122): 🌐 Handling PHP request
+01-08 11:35:14.696 D/PHPMonitor-Console( 3122): API Event Dispatch Error: Unexpected non-whitespace character after JSON at position 4 (line 1 column 5) -- From line 30

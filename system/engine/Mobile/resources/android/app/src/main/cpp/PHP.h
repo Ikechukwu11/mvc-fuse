@@ -9,7 +9,7 @@ extern "C" {
 
 typedef void (*phpOutputCallback)(const char* output);
 void override_embed_module_output(phpOutputCallback callback);
-void initialize_php_with_request(const char* post_data, const char* method, const char* uri);
+void initialize_php_with_request(const char* post_data, const char* method, const char* uri, const char* content_type);
 size_t capture_php_output(const char *str, size_t str_length);
 
 #ifdef __cplusplus

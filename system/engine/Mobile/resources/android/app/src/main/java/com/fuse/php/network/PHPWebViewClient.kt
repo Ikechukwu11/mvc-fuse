@@ -8,6 +8,7 @@ import android.content.Context
 import java.io.File
 import android.net.Uri
 import com.fuse.php.bridge.PHPBridge
+import com.fuse.php.bridge.RequestData
 import com.fuse.php.security.MobileCookieStore
 import com.fuse.php.security.MobileSecurity
 
@@ -47,6 +48,13 @@ class PHPWebViewClient(
         return try {
             // Get App public path
             val appPublicPath = phpBridge.getAppPublicPath()
+            val appStorageDir = File(context.filesDir.parent, "app_storage")
+            val storageRoot = File(appStorageDir, "persisted_data/storage")
+            val storageCandidate = if (cleanPath.startsWith("storage/")) {
+                File(storageRoot, cleanPath.removePrefix("storage/")).absolutePath
+            } else {
+                null
+            }
 
             // Try multiple possible locations for the asset
             val possiblePaths = listOf(
@@ -54,13 +62,14 @@ class PHPWebViewClient(
                 "$appPublicPath/$cleanPath",           // Direct path without query
                 "$appPublicPath/vendor/$cleanPath",    // Vendor path
                 "$appPublicPath/build/$cleanPath",      // Build path
+                storageCandidate ?: ""                  // App storage persisted files (e.g., /storage/app/...)
             )
 
             // Log all paths we're trying
             Log.d(TAG, "🔍 Checking paths: ${possiblePaths.joinToString()}")
 
             // Try each path
-            val assetFile = possiblePaths.firstOrNull { File(it).exists() }?.let { File(it) }
+            val assetFile = possiblePaths.firstOrNull { it.isNotBlank() && File(it).exists() }?.let { File(it) }
 
             if (assetFile != null && assetFile.exists()) {
                 Log.d(TAG, "✅ Found asset at: ${assetFile.absolutePath}")
@@ -177,13 +186,29 @@ class PHPWebViewClient(
         }
         val method = request.method.uppercase()
 
+        val requestData = phpBridge.getRequestData(request.url.toString())
+        val postBody = if (method in listOf("POST", "PUT", "PATCH")) {
+            requestData?.body ?: ""
+        } else ""
+
+        // Merge captured headers (like Content-Type from forms)
+        if (requestData?.headers != null) {
+            val extraHeaders = requestData.headers.split("\n")
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+                .associate {
+                    val parts = it.split(":", limit = 2)
+                    if (parts.size == 2) parts[0].trim() to parts[1].trim() else "" to ""
+                }
+                .filterKeys { it.isNotEmpty() }
+
+            headers.putAll(extraHeaders)
+        }
+
         val phpRequest = PHPRequest(
             url = normalizedPath,
             method = request.method,
-            body = if (method in listOf("POST", "PUT", "PATCH")) {
-                // Try to get specific data for this URL, fallback to lastPostData
-                phpBridge.getRequestData(request.url.toString()) ?: phpBridge.getLastPostData() ?: ""
-            } else "",
+            body = postBody,
             headers = headers,
             getParameters = request.url.queryParameterNames?.associateWith {
                 request.url.getQueryParameter(it) ?: ""
@@ -217,28 +242,55 @@ class PHPWebViewClient(
         if (statusCode in 300..399) {
             val location = responseHeaders["Location"] ?: responseHeaders["location"]
             if (!location.isNullOrEmpty()) {
-                val redirectUrl = when {
-                    location.startsWith("/") -> location
-                    location.startsWith("http") -> Uri.parse(location).path ?: "/"
-                    else -> "/$location"
+                Log.d(TAG, "🔄 Intercepting redirect to $location")
+
+                var targetUrl = location
+                // If it's an absolute URL pointing to localhost/127.0.0.1, convert to relative path
+                // to ensure it stays within our WebView's 127.0.0.1 context
+                if (location.startsWith("http://localhost") || location.startsWith("http://127.0.0.1")) {
+                    try {
+                        val uri = Uri.parse(location)
+                        val path = uri.path ?: "/"
+                        val query = uri.encodedQuery
+                        targetUrl = if (query.isNullOrEmpty()) path else "$path?$query"
+                        Log.d(TAG, "🔄 Rewrote redirect URL to relative: $targetUrl")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "⚠️ Error parsing redirect URL: $location", e)
+                    }
                 }
 
-                val redirectUri = Uri.parse("http://127.0.0.1$redirectUrl")
+                // Return a client-side redirect response
+                // This forces the WebView to update its URL bar and history state
+                val redirectHtml = """
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta http-equiv="refresh" content="0;url=$targetUrl">
+                        <script>
+                            window.location.replace("$targetUrl");
+                        </script>
+                    </head>
+                    <body>
+                        <p>Redirecting to <a href="$targetUrl">$targetUrl</a>...</p>
+                    </body>
+                    </html>
+                """.trimIndent()
 
-                val redirectRequest = object : WebResourceRequest {
-                    override fun getUrl(): Uri = redirectUri
-                    override fun isForMainFrame(): Boolean = request.isForMainFrame
-                    override fun isRedirect(): Boolean = true
-                    override fun hasGesture(): Boolean = false
-                    override fun getMethod(): String = "GET"
-                    override fun getRequestHeaders(): Map<String, String> = request.requestHeaders
-                }
+                // Remove Location header to prevent confusion (since we are returning 200 OK with meta refresh)
+                val newHeaders = HashMap(responseHeaders)
+                newHeaders.remove("Location")
+                newHeaders.remove("location")
+                newHeaders["Content-Type"] = "text/html"
 
-                val currentPath = request.url.path ?: "/"
-                val targetPath = redirectUri.path ?: "/"
-
-                Log.d(TAG, "🔄 Following redirect ${redirectCount + 1}/10 to $redirectUrl")
-                return handlePHPRequest(redirectRequest, null, redirectCount + 1)
+                return WebResourceResponse(
+                    "text/html",
+                    "UTF-8",
+                    200,
+                    "OK",
+                    newHeaders,
+                    ByteArrayInputStream(redirectHtml.toByteArray())
+                )
             }
         }
 
@@ -258,48 +310,39 @@ class PHPWebViewClient(
        var statusCode = 200
        var body = ""
 
-       val parts = rawResponse.split("\r\n\r\n", limit = 2)
+       val parts = rawResponse.split(Regex("\\r?\\n\\r?\\n"), limit = 2)
        if (parts.size < 2) {
-           Log.w(TAG, "⚠️ Could not split response into headers/body. Raw: ${rawResponse.take(200)}")
-           return Triple(headers, rawResponse.trim(), statusCode)
-       }
-
-       val headerLines = parts[0].split("\r\n")
-       body = parts[1]
-
-       val statusLine = headerLines.firstOrNull()
-       if (statusLine != null && statusLine.startsWith("HTTP/")) {
-           val statusParts = statusLine.split(" ")
-           if (statusParts.size >= 2) {
-               try {
-                   statusCode = statusParts[1].toInt()
-                   Log.d(TAG, "📋 Parsed status code: $statusCode")
-               } catch (e: Exception) {
-                   Log.w(TAG, "⚠️ Failed to parse status code from: $statusLine")
-               }
+           val idx = rawResponse.indexOf("\n\n")
+           if (idx >= 0) {
+               val head = rawResponse.substring(0, idx)
+               val b = rawResponse.substring(idx + 2)
+               val headerLinesFallback = head.split(Regex("\\r?\\n"))
+               parseHeaders(headerLinesFallback, headers)?.let { statusCode = it }
+               body = b
+           } else {
+               return Triple(headers, rawResponse.trim(), statusCode)
            }
+       } else {
+           val headerLines = parts[0].split(Regex("\\r?\\n"))
+           parseHeaders(headerLines, headers)?.let { statusCode = it }
+           body = parts[1]
        }
 
-       for (i in 1 until headerLines.size) {
-           val line = headerLines[i]
-           val colonIndex = line.indexOf(":")
-           if (colonIndex > 0) {
-               val key = line.substring(0, colonIndex).trim()
-               val value = line.substring(colonIndex + 1).trim()
-               if (key.equals("Set-Cookie", ignoreCase = true)) {
-                   headers.merge(key, value) { old, new -> "$old\n$new" }
-               } else {
-                   headers[key] = value
-               }
-           }
+       val cleanedBody = run {
+           val bodyParts = body.split(Regex("\\r?\\n\\r?\\n"), limit = 2)
+           val firstLine = body.lineSequence().firstOrNull() ?: ""
+           val looksLikeStatus = firstLine.startsWith("HTTP/")
+           val looksLikeHeaderBlock = firstLine.startsWith("X-Powered-By:", true) ||
+                   firstLine.startsWith("Cache-Control:", true) ||
+                   firstLine.startsWith("Pragma:", true) ||
+                   firstLine.startsWith("Expires:", true)
+           if (bodyParts.size == 2 && (looksLikeStatus || looksLikeHeaderBlock)) bodyParts[1] else body
        }
 
-       // Log PHP timing header if present
        headers["X-PHP-Timing"]?.let { timing ->
            Log.d("PerfTiming", "⏱️ PHP_TIMING $timing")
        }
 
-       // Set cookies
        headers.entries
            .filter { it.key.equals("Set-Cookie", ignoreCase = true) }
            .flatMap { it.value.split("\n") }
@@ -312,7 +355,35 @@ class PHPWebViewClient(
        CookieManager.getInstance().flush()
        MobileCookieStore.logAll()
 
-       return Triple(headers, body.trim(), statusCode)
+       return Triple(headers, cleanedBody.trim(), statusCode)
+   }
+
+   private fun parseHeaders(lines: List<String>, headers: MutableMap<String, String>): Int? {
+       var code: Int? = null
+       val statusLine = lines.firstOrNull()
+       if (statusLine != null && statusLine.startsWith("HTTP/")) {
+           val statusParts = statusLine.split(" ")
+           if (statusParts.size >= 2) {
+               try {
+                   code = statusParts[1].toInt()
+                   Log.d(TAG, "📋 Parsed status code: $code")
+               } catch (_: Exception) { }
+           }
+       }
+       for (i in 1 until lines.size) {
+           val line = lines[i]
+           val colonIndex = line.indexOf(":")
+           if (colonIndex > 0) {
+               val key = line.substring(0, colonIndex).trim()
+               val value = line.substring(colonIndex + 1).trim()
+               if (key.equals("Set-Cookie", ignoreCase = true)) {
+                   headers.merge(key, value) { old, new -> "$old\n$new" }
+               } else {
+                   headers[key] = value
+               }
+           }
+       }
+       return code
    }
 
 

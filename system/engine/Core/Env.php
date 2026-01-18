@@ -45,10 +45,19 @@ class Env
                     $value = $matches[1];
                 }
 
-                self::$vars[$key] = $value;
-                $_ENV[$key] = $value;
-                $_SERVER[$key] = $value;
-                putenv("$key=$value");
+                $mobile = getenv('MVC_MOBILE_RUNNING');
+                $isMobile = $mobile && strtolower($mobile) === 'true';
+                $priorityKeys = ['DB_CONNECTION','DB_DATABASE','SESSION_SAVE_PATH'];
+                $skip = false;
+                if ($isMobile && in_array($key, $priorityKeys, true) && getenv($key) !== false) {
+                    $skip = true;
+                }
+                if (!$skip) {
+                    self::$vars[$key] = $value;
+                    $_ENV[$key] = $value;
+                    $_SERVER[$key] = $value;
+                    putenv("$key=$value");
+                }
             }
         }
     }

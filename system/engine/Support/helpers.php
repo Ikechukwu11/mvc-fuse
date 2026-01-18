@@ -3,6 +3,7 @@
 use Engine\Support\View;
 use Engine\Http\Middleware\CsrfMiddleware;
 use Engine\Core\Config;
+use Engine\Http\Router;
 
 /**
  * Get a configuration value.
@@ -34,18 +35,28 @@ function env(string $key, mixed $default = null)
  * @param string $name View name (e.g., 'home.index')
  * @param array $data Data to pass to the view
  * @param string|null $layout Optional layout to wrap the view
- * @return string Rendered HTML
+ * @return $string | \Engine\Support\ViewResponse Rendered HTML wrapper
  */
 function view(string $name, array $data = [], ?string $layout = null)
 {
     $base = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'views';
     $v = new View($base);
+    if (isset($name)) {
+        $name = str_replace('.', '/', $name);
+    }
+
+    if (isset($layout)) {
+        $layout = str_replace('.', '/', $layout);
+    }
+
+    //$name = str_replace('.', '/', $name);
     $content = $v->render($name, $data);
+    //$layout = str_replace('.', '/', $layout);
     if ($layout) {
         $data['content'] = $content;
-        return $v->render($layout, $data);
+        $content = $v->render($layout, $data);
     }
-    return $content;
+    return $content; //new \Engine\Support\ViewResponse($content);
 }
 
 /**
@@ -263,4 +274,44 @@ if (!function_exists('dd')) {
 function route(string $path): string
 {
     return BASE_PATH . $path;
+}
+
+function getRandomColor()
+{
+    $letters = '0123456789ABCDEF';
+    $color = '#';
+    for ($i = 0; $i < 6; $i++) {
+        $color .= $letters[rand(0, 15)];
+    }
+    // Ensure the color is not #FFF or #FFFFFF
+    if ($color === '#FFF' || $color === '#FFFFFF') {
+        $color = '#FFFDD0';
+    }
+    return $color;
+}
+
+function router(): Router
+{
+    return $GLOBALS['__router'];
+}
+
+function current_route(): ?string
+{
+    return router()->currentRouteName();
+}
+
+function current_route_path(): ?string
+{
+    return router()->currentRoutePath();
+}
+
+// function route_is(string|array $names): bool
+// {
+//     return router()->is($names);
+// }
+
+function app(string $class)
+{
+    global $router;
+    return $router;
 }

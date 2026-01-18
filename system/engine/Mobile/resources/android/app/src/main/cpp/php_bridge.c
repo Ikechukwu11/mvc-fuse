@@ -193,7 +193,7 @@ int android_header_handler(sapi_header_struct *sapi_header, sapi_header_op_enum 
     return 0;
 }
 
-char* run_php_script_once(const char* scriptPath, const char* method, const char* uri, const char* postData) {
+char* run_php_script_once(const char* scriptPath, const char* method, const char* uri, const char* postData, const char* content_type) {
     clear_collected_output();
     clear_header_buffer();
 
@@ -225,6 +225,13 @@ char* run_php_script_once(const char* scriptPath, const char* method, const char
     setenv("ASSET_URL", "http://127.0.0.1/_assets/", 1);
     setenv("MVC_MOBILE_RUNNING", "true", 1);
 
+    // Explicitly set content type env var if provided (as backup)
+    if (content_type) {
+        setenv("CONTENT_TYPE", content_type, 1);
+    } else {
+        unsetenv("CONTENT_TYPE");
+    }
+
     // ✅ Set QUERY_STRING and defer parsing
     const char* query_string = "";
     const char* query_start = strchr(uri, '?');
@@ -249,7 +256,7 @@ char* run_php_script_once(const char* scriptPath, const char* method, const char
                 }
 
                 // ✅ Set up POST data (if needed)
-                initialize_php_with_request(postData ?: "", method, uri);
+                initialize_php_with_request(postData ?: "", method, uri, content_type);
 
                 // ✅ Execute the PHP script
                 zend_file_handle fileHandle;
@@ -266,6 +273,7 @@ char* run_php_script_once(const char* scriptPath, const char* method, const char
                 }
 
             } zend_end_try();
+
 
     // ✅ End request lifecycle
     php_request_shutdown(NULL);
@@ -345,18 +353,22 @@ JNIEXPORT jint JNICALL native_set_env(JNIEnv *env, jobject thiz,
 
 JNIEXPORT void JNICALL native_set_request_info(JNIEnv *env, jobject thiz,
                                                      jstring method, jstring uri,
-                                                     jstring post_data) {
+                                                     jstring post_data, jstring content_type) {
 
     const char *methodStr = (*env)->GetStringUTFChars(env, method, NULL);
     const char *uriStr = (*env)->GetStringUTFChars(env, uri, NULL);
     const char *postStr = post_data ? (*env)->GetStringUTFChars(env, post_data, NULL) : "";
+    const char *ctStr = content_type ? (*env)->GetStringUTFChars(env, content_type, NULL) : NULL;
 
-    initialize_php_with_request(postStr, methodStr, uriStr);
+    initialize_php_with_request(postStr, methodStr, uriStr, ctStr);
 
     (*env)->ReleaseStringUTFChars(env, method, methodStr);
     (*env)->ReleaseStringUTFChars(env, uri, uriStr);
     if (post_data) {
         (*env)->ReleaseStringUTFChars(env, post_data, postStr);
+    }
+    if (content_type) {
+        (*env)->ReleaseStringUTFChars(env, content_type, ctStr);
     }
 }
 
@@ -370,22 +382,27 @@ JNIEXPORT jstring JNICALL native_run_runner_command(JNIEnv *env, jobject thiz, j
     php_embed_module.php_ini_ignore = 0;
     php_embed_module.ini_entries = "display_errors=1\nimplicit_flush=1\noutput_buffering=0\n";
 
-    // Get App Public path
+    // Resolve App root path (not public) to locate runner correctly
     jclass cls = (*env)->GetObjectClass(env, thiz);
-    jmethodID method = (*env)->GetMethodID(env, cls, "getAppPublicPath", "()Ljava/lang/String;");
-    jstring jAppPath = (jstring)(*env)->CallObjectMethod(env, thiz, method);
-    const char *cAppPath = (*env)->GetStringUTFChars(env, jAppPath, NULL);
+    jmethodID getAppPathMethod = (*env)->GetMethodID(env, cls, "getAppPath", "()Ljava/lang/String;");
+    jstring jAppRoot = (jstring)(*env)->CallObjectMethod(env, thiz, getAppPathMethod);
+    const char *cAppRoot = (*env)->GetStringUTFChars(env, jAppRoot, NULL);
 
     native_initialize(env, thiz);
 
-    // Assuming cAppPath is .../storage/app/public
-    // runner is at .../storage/app/runner
+    // runner resides under app root
     char runnerPath[1024];
-    snprintf(runnerPath, sizeof(runnerPath), "%s/../runner", cAppPath);
+    snprintf(runnerPath, sizeof(runnerPath), "%s/runner", cAppRoot);
     char basePath[1024];
-    snprintf(basePath, sizeof(basePath), "%s/..", cAppPath);
+    snprintf(basePath, sizeof(basePath), "%s", cAppRoot);
     chdir(basePath);
     LOGI("✅ Changed CWD to Base: %s", basePath);
+
+    // Ensure mobile flags are present so .env does not override persisted DB env
+    setenv("MVC_MOBILE_RUNNING", "true", 1);
+    setenv("APP_RUNNING_IN_CONSOLE", "true", 1);
+    setenv("PHP_SELF", "runner", 1);
+    setenv("APP_ENV", "local", 1);
 
     // Tokenize command
     char *argv[128];
@@ -404,10 +421,6 @@ JNIEXPORT jstring JNICALL native_run_runner_command(JNIEnv *env, jobject thiz, j
         php_embed_shutdown();
         php_initialized = 0;
     }
-
-    setenv("APP_RUNNING_IN_CONSOLE", "true", 1);
-    setenv("PHP_SELF", "runner", 1);
-    setenv("APP_ENV", "local", 1);
 
     if (php_embed_init(argc, argv) == SUCCESS) {
         php_initialized = 1;
@@ -429,8 +442,8 @@ JNIEXPORT jstring JNICALL native_run_runner_command(JNIEnv *env, jobject thiz, j
     }
 
     (*env)->ReleaseStringUTFChars(env, jcommand, command);
-    (*env)->ReleaseStringUTFChars(env, jAppPath, cAppPath);
-    (*env)->DeleteLocalRef(env, jAppPath);
+    (*env)->ReleaseStringUTFChars(env, jAppRoot, cAppRoot);
+    (*env)->DeleteLocalRef(env, jAppRoot);
     free(commandCopy);
 
     return (*env)->NewStringUTF(env, g_collected_output ? g_collected_output : "");
@@ -473,14 +486,15 @@ JNIEXPORT jstring JNICALL native_get_app_path(JNIEnv *env, jobject thiz) {
 
 JNIEXPORT jstring JNICALL native_handle_request_once(
         JNIEnv *env, jobject thiz,
-        jstring jMethod, jstring jUri, jstring jPostData, jstring jScriptPath) {
+        jstring jMethod, jstring jUri, jstring jPostData, jstring jContentType, jstring jScriptPath) {
 
     const char *method = (*env)->GetStringUTFChars(env, jMethod, NULL);
     const char *uri = (*env)->GetStringUTFChars(env, jUri, NULL);
     const char *post = jPostData ? (*env)->GetStringUTFChars(env, jPostData, NULL) : "";
+    const char *ctype = jContentType ? (*env)->GetStringUTFChars(env, jContentType, NULL) : NULL;
     const char *path = (*env)->GetStringUTFChars(env, jScriptPath, NULL);
 
-    char *output = run_php_script_once(path, method, uri, post);
+    char *output = run_php_script_once(path, method, uri, post, ctype);
 
     jstring result = (*env)->NewStringUTF(env, output ? output : "");
 
@@ -490,6 +504,7 @@ JNIEXPORT jstring JNICALL native_handle_request_once(
     (*env)->ReleaseStringUTFChars(env, jUri, uri);
     (*env)->ReleaseStringUTFChars(env, jScriptPath, path);
     if (jPostData) (*env)->ReleaseStringUTFChars(env, jPostData, post);
+    if (jContentType) (*env)->ReleaseStringUTFChars(env, jContentType, ctype);
 
     return result;
 }
@@ -575,12 +590,12 @@ static JNINativeMethod gMethods[] = {
             {"nativeExecuteScript", "(Ljava/lang/String;)Ljava/lang/String;", (void *) native_execute_script},
             {"initialize", "()V", (void *) native_initialize},
             {"shutdown", "()V", (void *) native_shutdown},
-            {"setRequestInfo", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", (void *) native_set_request_info},
+            {"setRequestInfo", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", (void *) native_set_request_info},
             {"runRunnerCommand", "(Ljava/lang/String;)Ljava/lang/String;", (void *) native_run_runner_command},
             {"getAppPublicPath", "()Ljava/lang/String;", (void *) native_get_app_public_path},
             {"getAppPath", "()Ljava/lang/String;", (void *) native_get_app_path},
             {"nativeSetEnv", "(Ljava/lang/String;Ljava/lang/String;I)I", (void *) native_set_env},
-            {"nativeHandleRequestOnce","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",(void *) native_handle_request_once}
+            {"nativeHandleRequestOnce","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",(void *) native_handle_request_once}
     };
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {

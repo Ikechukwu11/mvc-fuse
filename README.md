@@ -40,6 +40,7 @@ Lightweight PHP MVC with server-driven SPA option (Fuse). No external dependenci
 - Define routes in `routes/web.php`
 - Supported methods: GET, POST, PUT, PATCH, DELETE
 - Path params: `/users/{id}` passed to handlers as arguments
+- Music demo endpoints: `/music`, `/music/albumart/default`, `/music/albumart/{id}`
 
 ```php
 use App\Controllers\HomeController;

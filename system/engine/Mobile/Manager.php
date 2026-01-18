@@ -59,6 +59,11 @@ class Manager
 
         echo "Target Directory: $targetDir\n";
 
+        if (is_dir($targetDir) && is_dir($targetDir . '/arm64-v8a')) {
+             echo "Libraries already installed. Skipping download.\n";
+             return;
+        }
+
         if (!is_dir($targetDir)) {
             echo "Creating target directory...\n";
             mkdir($targetDir, 0777, true);

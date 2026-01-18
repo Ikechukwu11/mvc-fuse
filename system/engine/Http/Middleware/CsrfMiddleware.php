@@ -1,6 +1,7 @@
 <?php
 namespace Engine\Http\Middleware;
 
+use Engine\Core\Logger;
 use Engine\Http\Middleware;
 use Engine\Http\Request;
 use Engine\Http\Response;
@@ -20,7 +21,7 @@ class CsrfMiddleware implements Middleware
 
         $token = isset($_SESSION['_csrf']) ? $_SESSION['_csrf'] : null;
         $incoming = $request->header('X-CSRF-TOKEN') ?? $request->header('X-CSRF') ?? $request->body['_token'] ?? null;
-        var_dump([
+        (new Logger())->info('CSRF Middleware', [
             'request' => $request,
             'tokens' => [
                 $token,

@@ -6,7 +6,7 @@ use Engine\Fuse\Component;
 use App\Models\User;
 use Engine\Storage\Storage;
 
-class Profile extends Component
+class Profile extends BaseFuse
 {
     public string $name = '';
     public string $email = '';
@@ -15,7 +15,7 @@ class Profile extends Component
     public string $message = '';
     public string $messageType = 'success'; // success or error
 
-    public function mount()
+    public function mount(): void
     {
         $id = session_get('user_id');
         if (!$id) return;
@@ -52,6 +52,8 @@ class Profile extends Component
         $this->messageType = 'success';
 
         $this->dispatch('profile-updated', ['name' => $this->name]);
+        $this->dispatchNative('Toast.Show', ['message' => 'Profile updated']);
+        $this->dispatchNative('Haptics.Vibrate', ['duration' => 50]);
     }
 
     public function updateBio()
@@ -63,6 +65,8 @@ class Profile extends Component
 
         $this->message = 'Bio updated successfully.';
         $this->messageType = 'success';
+        $this->dispatchNative('Toast.Show', ['message' => 'Bio saved']);
+        $this->dispatchNative('Haptics.Vibrate', ['duration' => 50]);
     }
 
     public function deleteBio()
@@ -75,6 +79,16 @@ class Profile extends Component
 
         $this->message = 'Bio deleted successfully.';
         $this->messageType = 'success';
+        $this->dispatchNative('Toast.Show', ['message' => 'Bio deleted']);
+        $this->dispatchNative('Haptics.Vibrate', ['duration' => 50]);
+    }
+
+    public function logout()
+    {
+        session_remove('user_id');
+        $this->dispatchNative('Toast.Show', ['message' => 'Logged out']);
+        $this->dispatchNative('Haptics.Vibrate', ['duration' => 50]);
+        $this->redirect(route('/fuse/login'));
     }
 
     public function render()
@@ -92,7 +106,7 @@ class Profile extends Component
         <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2>Profile (Fuse Component)</h2>
             {$messageHtml}
-            
+
             <div style="background: #f3f4f6; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
                 <strong>Computed Name:</strong> {$this->decoratedName}
             </div>
@@ -121,6 +135,16 @@ class Profile extends Component
                     <button fuse:click="updateBio" style="background: #10B981; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Save Bio</button>
                     <button fuse:click="deleteBio" style="background: #EF4444; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Delete Bio</button>
                 </div>
+            </div>
+
+            <div style="margin-bottom: 20px; text-align: center;">
+                <a href="/fuse/native" fuse:naviga style="color: #4F46E5; font-weight: bold; text-decoration: none; padding: 10px; border: 1px dashed #4F46E5; border-radius: 4px; display: inline-block;">
+                    📱 Open Native Features Demo
+                </a>
+            </div>
+
+            <div style="text-align: center;">
+                <button fuse:click="logout" style="background: #6B7280; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Logout</button>
             </div>
         </div>
 HTML;

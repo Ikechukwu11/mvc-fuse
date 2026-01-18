@@ -1,5 +1,9 @@
 package com.fuse.php.ui
 
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.Build
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -13,6 +17,7 @@ import androidx.activity.compose.setContent
 import com.fuse.php.bridge.PHPBridge
 import com.fuse.php.bridge.MobileEnvironment
 import com.fuse.php.bridge.registerBridgeFunctions
+import com.fuse.php.bridge.BridgeFunctionRegistry
 import com.fuse.php.network.WebViewManager
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -24,6 +29,7 @@ import com.fuse.php.lifecycle.NativePHPLifecycle
 import java.io.File
 import java.net.URL
 import android.webkit.WebChromeClient
+import org.json.JSONObject
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -42,6 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import android.provider.MediaStore
+import android.provider.OpenableColumns
+import android.net.Uri
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +61,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.graphics.Insets
 import kotlinx.coroutines.launch
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
+import com.fuse.php.media.MediaPlaybackService
+import com.fuse.php.media.AudioPickerHelper
+import android.content.ComponentName
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.util.concurrent.MoreExecutors
 
 class MainActivity : FragmentActivity(), WebViewProvider {
     private lateinit var webView: WebView
@@ -68,15 +84,38 @@ class MainActivity : FragmentActivity(), WebViewProvider {
     // Status bar style configuration - replaced during build
     private val statusBarStyle = "REPLACE_STATUS_BAR_STYLE"
 
+    // Media Controller
+    private var mediaController: MediaController? = null
+    private var controllerFuture: ListenableFuture<MediaController>? = null
+    private var audioPickerHelper: AudioPickerHelper? = null
+
+    fun getMusicController(): MediaController? {
+        return mediaController
+    }
+
     companion object {
         // Static instance holder for accessing MainActivity from other activities
         var instance: MainActivity? = null
             private set
     }
 
+    fun pickAudio() {
+        audioPickerHelper?.pickAudio()
+    }
+
+    fun getCoordinator(): NativeActionCoordinator? {
+        return if (::coord.isInitialized) coord else null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         instance = this
+        audioPickerHelper = AudioPickerHelper(this) { uri, title, artist ->
+            getCoordinator()?.dispatch(
+                "Media.TrackPicked",
+                JSONObject(mapOf("url" to uri.toString(), "title" to title, "artist" to artist)).toString()
+            )
+        }
 
         // Android 15 edge-to-edge compatibility fix
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -165,6 +204,27 @@ class MainActivity : FragmentActivity(), WebViewProvider {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val sessionToken = SessionToken(this, ComponentName(this, MediaPlaybackService::class.java))
+        controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
+        controllerFuture?.addListener({
+            try {
+                mediaController = controllerFuture?.get()
+                Log.d("Media", "✅ MediaController connected")
+            } catch (e: Exception) {
+                Log.e("Media", "❌ Failed to connect MediaController", e)
+            }
+        }, MoreExecutors.directExecutor())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        controllerFuture?.let {
+            MediaController.releaseFuture(it)
+        }
+    }
+
      override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         Log.d("MainActivity", "🌀 Config changed: orientation = ${newConfig.orientation}")
@@ -231,6 +291,80 @@ class MainActivity : FragmentActivity(), WebViewProvider {
                     Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 windowInsetsController.isAppearanceLightStatusBars = !isSystemDarkMode
                 windowInsetsController.isAppearanceLightNavigationBars = !isSystemDarkMode
+            }
+        }
+    }
+
+    /**
+     * Dynamically update status bar color and style
+     * Called from Bridge functions
+     */
+    @Suppress("DEPRECATION")
+    fun updateStatusBar(colorHex: String?, style: String?, overlay: Boolean = true) {
+        runOnUiThread {
+            val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+            if (overlay) {
+                window.statusBarColor = android.graphics.Color.TRANSPARENT
+                val targetColor = try {
+                    colorHex?.let { android.graphics.Color.parseColor(it) } ?: android.graphics.Color.TRANSPARENT
+                } catch (e: Exception) {
+                    Log.e("StatusBar", "❌ Invalid color format: $colorHex", e)
+                    android.graphics.Color.TRANSPARENT
+                }
+                val hexx = String.format("#%08X", targetColor)
+                val r = android.graphics.Color.red(targetColor)
+                val g = android.graphics.Color.green(targetColor)
+                val b = android.graphics.Color.blue(targetColor)
+                val a = android.graphics.Color.alpha(targetColor) / 255f
+                val hex = "rgba($r,$g,$b,$a)"
+                val density = resources.displayMetrics.density
+                val topPx = ((pendingInsets?.top ?: 0) / density).toInt()
+                val js = """
+                    (function() {
+                        try {
+                            var id = '__native_statusbar_style__';
+                            var styleEl = document.getElementById(id);
+                            var css = 'body::before{content:"";position:fixed;top:0;left:0;right:0;height:${topPx}px;background:${hex};pointer-events:none;z-index:2147483647;}';
+                            if (!styleEl) {
+                                styleEl = document.createElement('style');
+                                styleEl.id = id;
+                                styleEl.type = 'text/css';
+                                styleEl.appendChild(document.createTextNode(css));
+                                if (document.head) { document.head.appendChild(styleEl); }
+                            } else {
+                                while (styleEl.firstChild) styleEl.removeChild(styleEl.firstChild);
+                                styleEl.appendChild(document.createTextNode(css));
+                            }
+                        } catch (err) {}
+                    })();
+                """.trimIndent()
+                webView.evaluateJavascript(js, null)
+            } else {
+                if (colorHex != null) {
+                    try {
+                        val color = android.graphics.Color.parseColor(colorHex)
+                        window.statusBarColor = color
+                    } catch (e: Exception) {
+                        Log.e("StatusBar", "❌ Invalid color format: $colorHex", e)
+                    }
+                } else {
+                    window.statusBarColor = android.graphics.Color.TRANSPARENT
+                }
+            }
+            if (style != null) {
+                when (style.lowercase()) {
+                    "light" -> {
+                        windowInsetsController.isAppearanceLightStatusBars = false
+                    }
+                    "dark" -> {
+                        windowInsetsController.isAppearanceLightStatusBars = true
+                    }
+                    "auto" -> {
+                        val isSystemDarkMode = (resources.configuration.uiMode and
+                                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                        windowInsetsController.isAppearanceLightStatusBars = !isSystemDarkMode
+                    }
+                }
             }
         }
     }
@@ -414,6 +548,43 @@ class MainActivity : FragmentActivity(), WebViewProvider {
                     Log.e("Permission", "❌ Push notification permission denied")
                 }
             }
+            1003 -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.d("Permission", "✅ Camera permission granted — re-triggering flashlight toggle")
+                    try {
+                        val function = com.fuse.php.bridge.BridgeFunctionRegistry.shared.get("Device.ToggleFlashlight")
+                        if (function != null) {
+                            // Execute with empty parameters
+                            function.execute(emptyMap())
+                            Log.d("Permission", "✅ Flashlight toggle executed after permission grant")
+                        } else {
+                            Log.e("Permission", "❌ Bridge function 'Device.ToggleFlashlight' not found")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("Permission", "❌ Error re-triggering flashlight toggle: ${e.message}", e)
+                    }
+                } else {
+                    Log.e("Permission", "❌ Camera permission denied — cannot toggle flashlight")
+                }
+            }
+            2004 -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.d("Permission", "✅ Media permission granted — re-triggering library scan")
+                    try {
+                        val function = com.fuse.php.bridge.BridgeFunctionRegistry.shared.get("MediaLibrary.Scan")
+                        if (function != null) {
+                            function.execute(emptyMap())
+                            Log.d("Permission", "✅ MediaLibrary.Scan executed after permission grant")
+                        } else {
+                            Log.e("Permission", "❌ Bridge function 'MediaLibrary.Scan' not found")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("Permission", "❌ Error re-triggering media scan: ${e.message}", e)
+                    }
+                } else {
+                    Log.e("Permission", "❌ Media permission denied — cannot scan library")
+                }
+            }
         }
     }
 
@@ -502,6 +673,11 @@ class MainActivity : FragmentActivity(), WebViewProvider {
                 dispatch: function(eventName, payload) {
                     const cbs = listeners[eventName] || [];
                     cbs.forEach(cb => cb(payload, eventName));
+
+                    if (window.AndroidBridge && window.AndroidBridge.dispatch) {
+                         const payloadStr = (typeof payload === 'object') ? JSON.stringify(payload) : String(payload);
+                         window.AndroidBridge.dispatch(eventName, payloadStr);
+                    }
                 },
                 openDrawer: function() {
                     if (window.AndroidBridge) {
@@ -512,7 +688,7 @@ class MainActivity : FragmentActivity(), WebViewProvider {
 
             window.Native = Native;
 
-            document.addEventListener("native-event", function (e) {
+            window.addEventListener("native-event", function (e) {
                 // Normalize event names by removing leading backslashes
                 let eventName = e.detail.event.replace(/^(\\\\)+/, '');
                 const payload = e.detail.payload;
@@ -908,6 +1084,63 @@ class MainActivity : FragmentActivity(), WebViewProvider {
     }
 
     inner class AndroidBridge {
+        @android.webkit.JavascriptInterface
+        fun dispatch(event: String, payload: String): String {
+             Log.d("AndroidBridge", "⚡ dispatch() called: $event, $payload")
+
+             try {
+                 // 1. Check registry
+                 val function = BridgeFunctionRegistry.shared.get(event)
+                 if (function == null) {
+                     Log.w("AndroidBridge", "⚠️ Function not found: $event")
+                     return "{}"
+                 }
+
+                // 2. Parse Payload (robust to arrays/empty/null)
+                val params = mutableMapOf<String, Any>()
+                val trimmed = payload.trim()
+                if (trimmed.isNotEmpty() && trimmed.lowercase() != "null") {
+                    try {
+                        if (trimmed.startsWith("[")) {
+                            // If array, use first object or ignore if empty
+                            val arr = org.json.JSONArray(trimmed)
+                            if (arr.length() > 0) {
+                                val obj = arr.getJSONObject(0)
+                                val keys = obj.keys()
+                                while (keys.hasNext()) {
+                                    val key = keys.next()
+                                    params[key] = obj.get(key)
+                                }
+                            } // else: empty array => no params
+                        } else {
+                            val json = JSONObject(trimmed)
+                            val keys = json.keys()
+                            while (keys.hasNext()) {
+                                val key = keys.next()
+                                params[key] = json.get(key)
+                            }
+                        }
+                    } catch (je: Exception) {
+                        Log.w("AndroidBridge", "⚠️ Payload parse fallback for event $event: ${je.message}")
+                    }
+                }
+
+                // 3. Execute
+                return try {
+                    val result = function.execute(params)
+                    JSONObject(result).toString()
+                } catch (e: Exception) {
+                     Log.e("AndroidBridge", "❌ Error executing function $event", e)
+                     val errorMap = mapOf("error" to (e.message ?: "Unknown error"))
+                     JSONObject(errorMap).toString()
+                 }
+
+             } catch (e: Exception) {
+                 Log.e("AndroidBridge", "❌ Bridge error", e)
+                 return "{}"
+             }
+        }
+
         @android.webkit.JavascriptInterface
         fun openDrawer() {
             Log.d("AndroidBridge", "🖱️ openDrawer() called from JavaScript")

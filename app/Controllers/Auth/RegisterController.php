@@ -15,7 +15,6 @@ class RegisterController
     public function register(Request $request)
     {
         $data = $request->input();
-        
         // Basic Validation
         if (empty($data['name']) || empty($data['email']) || empty($data['password'])) {
             flash('error', 'All fields are required.');

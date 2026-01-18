@@ -5,6 +5,7 @@ namespace Engine\Fuse;
 use Engine\Support\Validator;
 use ReflectionClass;
 use ReflectionProperty;
+use Native\Mobile\Facades\App as AppFacade;
 
 /**
  * Base Component Class
@@ -47,6 +48,30 @@ abstract class Component
      * @var bool Whether to lazy load this component
      */
     public bool $lazy = false;
+
+    /**
+     * Status bar configuration to apply during rendering.
+     *
+     * @var array|null {color?: string|null, style?: string|null, overlay?: bool}
+     */
+    protected ?array $statusBar = null;
+
+    /**
+     * Configure the native status bar for this component.
+     *
+     * @param string|null $color Hex color (e.g., "#FF0000")
+     * @param string|null $style "light", "dark", or "auto"
+     * @param bool $overlay Whether to overlay content (default: true)
+     * @return void
+     */
+    public function useStatusBar(?string $color = null, ?string $style = null, bool $overlay = true): void
+    {
+        $this->statusBar = [
+            'color' => $color,
+            'style' => $style,
+            'overlay' => $overlay,
+        ];
+    }
 
     /**
      * Get the placeholder view or HTML for lazy loading.
@@ -92,6 +117,45 @@ HTML;
             'name' => $event,
             'detail' => $detail
         ];
+    }
+
+    /**
+     * Dispatch a browser event (alias for dispatch).
+     *
+     * @param string $event Event name
+     * @param mixed $detail Event detail data
+     * @return void
+     */
+    public function emit(string $event, mixed $detail = null)
+    {
+        $this->dispatch($event, $detail);
+    }
+
+    /**
+     * Dispatch a browser event deferred.
+     *
+     * @param string $event Event name
+     * @param mixed $detail Event detail data
+     * @return void
+     */
+    public function emitDeferred(string $event, mixed $detail = null)
+    {
+        $this->dispatch($event, $detail);
+    }
+
+    /**
+     * Dispatch a native event to the Android/iOS bridge.
+     *
+     * @param string $event Native event name (e.g. "Camera.TakePhoto")
+     * @param array $payload Data to pass to the native handler
+     * @return void
+     */
+    public function dispatchNative(string $event, array $payload = [])
+    {
+        $this->dispatch('native-event', [
+            'event' => $event,
+            'payload' => $payload
+        ]);
     }
 
     /**
@@ -251,7 +315,13 @@ HTML;
      */
     public function rendering()
     {
-        // No-op by default
+        if ($this->statusBar !== null) {
+            AppFacade::setStatusBar(
+                $this->statusBar['color'] ?? null,
+                $this->statusBar['style'] ?? null,
+                $this->statusBar['overlay'] ?? true
+            );
+        }
     }
 
     /**
@@ -524,7 +594,7 @@ HTML;
     public function output(): string
     {
         $this->rendering();
-        $viewContent = $this->render();
+        $viewContent = (string) $this->render();
         $this->rendered();
 
         $data = [
@@ -585,6 +655,7 @@ HTML;
         $class = static::class;
         /** @var Component $component */
         $component = new $class();
+        // dd($component);
 
         // Check for lazy loading
         if ($component->lazy) {

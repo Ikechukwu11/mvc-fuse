@@ -1,4 +1,5 @@
 <?php
+
 namespace Engine\Core;
 
 /**
@@ -48,6 +49,7 @@ class Bootstrap
         // Register Engine namespace to system/engine (not system/engine/Core)
         // so Engine\Core\Bootstrap maps to system/engine/Core/Bootstrap.php
         $loader->addNamespace('Engine', $enginePath);
+        $loader->addNamespace('Native', $enginePath . DIRECTORY_SEPARATOR . 'Native');
         $loader->addNamespace('App', $appPath);
         $loader->register();
 
@@ -74,6 +76,7 @@ class Bootstrap
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
             ]),
+            'fuse' => self::loadConfig($configPath . DIRECTORY_SEPARATOR . 'fuse.php', [])
         ];
 
         date_default_timezone_set($config['app']['timezone'] ?? 'UTC');

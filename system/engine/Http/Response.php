@@ -84,6 +84,22 @@ class Response
     }
 
     /**
+     * Set a raw response body with a custom content type.
+     *
+     * @param string $body Response body
+     * @param string $contentType Content-Type header value
+     * @param int $status HTTP status code
+     * @return self
+     */
+    public function raw(string $body, string $contentType = 'text/plain; charset=utf-8', int $status = 200): self
+    {
+        $this->setStatus($status);
+        $this->header('Content-Type', $contentType);
+        $this->body = $body;
+        return $this;
+    }
+
+    /**
      * Send the response to the client.
      *
      * Sends headers and outputs the body.
@@ -99,4 +115,3 @@ class Response
         echo $this->body;
     }
 }
-

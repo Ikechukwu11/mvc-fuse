@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Fuse;
 
 use Engine\Fuse\Component;
@@ -8,7 +9,7 @@ class TodoList extends Component
     public array $todos = [];
     public string $newTodo = '';
 
-    public function mount()
+    public function mount(): void
     {
         // Initial data could be fetched here if not already hydrated
         if (empty($this->todos)) {
@@ -22,7 +23,7 @@ class TodoList extends Component
     public function add()
     {
         if (trim($this->newTodo) === '') return;
-        
+
         $this->todos[] = [
             'id' => count($this->todos) + 1,
             'text' => $this->newTodo,

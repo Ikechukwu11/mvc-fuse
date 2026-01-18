@@ -93,14 +93,49 @@ const Fuse = {
    * Sets up loading bars, scans for components, and initializes navigation.
    */
   init() {
+    this.scheduler = new FuseScheduler();
     this.createLoadingBar();
     this.prefetchCache = {};
+    this.ready = false;
+
+    // Bridge Native Events to Window Events
+    document.addEventListener("native-event", (e) => {
+      // If native forwarder is installed by the WebView bridge, skip duplicate forwarding here
+      if (window.__nativeEventForwarder) return;
+      if (!e.detail || !e.detail.event) return;
+
+      this.scheduler.push(() => {
+        window.dispatchEvent(
+          new CustomEvent(e.detail.event, { detail: e.detail.payload })
+        );
+      });
+    });
+
     document.querySelectorAll("[fuse\\:id]").forEach((el) => {
       this.initComponent(el);
     });
     this.initLazy();
     this.initNavigation();
     window.addEventListener("popstate", (e) => this.handlePopState(e));
+
+    // Mark ready and flush any buffered native events captured before Fuse booted
+    this.ready = true;
+    this.flushBufferedNativeEvents();
+
+    // Process initial native events
+    if (window.FuseConfig && window.FuseConfig.initialNativeEvents) {
+      setTimeout(() => {
+        console.log(
+          "⚡ Dispatching initial native events...",
+          window.FuseConfig.initialNativeEvents
+        );
+        window.FuseConfig.initialNativeEvents.forEach((event) => {
+          this.scheduler.push(() => {
+            this.dispatchNative(event.name, event.detail);
+          });
+        });
+      }, 500);
+    }
   },
 
   /**
@@ -397,22 +432,69 @@ const Fuse = {
     const rawData = el.getAttribute("fuse:data");
     const componentData = JSON.parse(rawData);
 
+    // Cleanup existing window listeners
+    if (this.components[id] && this.components[id].windowListeners) {
+      this.components[id].windowListeners.forEach((l) =>
+        window.removeEventListener(l.event, l.fn)
+      );
+    }
+
     this.components[id] = {
       el: el,
       name: componentData.name,
       data: componentData.data,
+      windowListeners: [],
     };
 
     this.attachListeners(el, id);
   },
 
   /**
-   * Attach event listeners for `fuse:click` and `fuse:model`.
+   * Attach event listeners for `fuse:click`, `fuse:model`, and `fuse:window-on`.
    *
    * @param {HTMLElement} el
    * @param {string} componentId
    */
   attachListeners(el, componentId) {
+    // fuse:window-on
+    const windowOnNodes = [el, ...el.querySelectorAll("[fuse\\:window-on]")];
+    windowOnNodes.forEach((node) => {
+      if (!node.hasAttribute("fuse:window-on")) return;
+      const attr = node.getAttribute("fuse:window-on");
+      const entries = attr
+        .split(";")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+      entries.forEach((expr) => {
+        const i = expr.indexOf(":");
+        if (i === -1) return;
+        const eventName = expr.substring(0, i).trim();
+        const rawAction = expr.substring(i + 1).trim();
+        const listener = (e) => {
+          let { action, params } = this.parseAction(rawAction);
+
+          // Auto-inject event if no parens used in the action string
+          // e.g. "onTrackPicked" -> passes event detail
+          // e.g. "onTrackPicked($event)" -> passes event detail explicitly
+          if (!rawAction.includes("(")) {
+            params = ["$event"];
+          }
+
+          const resolvedParams = params.map((p) =>
+            p === "$event" ? e.detail || e : p
+          );
+          this.sendRequest(componentId, action, resolvedParams, node);
+        };
+        window.addEventListener(eventName, listener);
+        if (this.components[componentId]) {
+          this.components[componentId].windowListeners.push({
+            event: eventName,
+            fn: listener,
+          });
+        }
+      });
+    });
+
     // fuse:click
     el.querySelectorAll("[fuse\\:click]").forEach((node) => {
       node.addEventListener("click", (e) => {
@@ -541,6 +623,33 @@ const Fuse = {
   },
 
   /**
+   * Show error modal overlay
+   * @param {string} html
+   */
+  showErrorModal(html) {
+    // Remove existing overlay if any
+    const existing = document.getElementById("fuse-error-overlay");
+    if (existing) existing.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "fuse-error-overlay";
+
+    // If the HTML is a raw PHP error string (not wrapped in our div), wrap it
+    if (!html.trim().startsWith('<div style="position:fixed')) {
+      overlay.style.cssText =
+        "position:fixed;top:0;left:0;right:0;bottom:0;background:white;z-index:99999;overflow:auto;padding:20px;";
+      overlay.innerHTML = `<div style="max-width:800px;margin:0 auto;">${html}</div><button onclick="this.parentElement.parentElement.remove()" style="position:fixed;top:20px;right:20px;padding:10px;">Close</button>`;
+    } else {
+      // Our formatted HTML
+      overlay.innerHTML = html;
+      // Ensure the outer div id matches what the close button expects, or just append the HTML to body
+      // The HTML from PHP already has a remove() call on 'fuse-error-overlay'
+    }
+
+    document.body.appendChild(overlay);
+  },
+
+  /**
    * Send an AJAX request to the server to update the component.
    *
    * @param {string} componentId
@@ -563,6 +672,10 @@ const Fuse = {
         if (loadingTarget) {
           globalLoading = false;
         }
+      }
+      // Suppress global loader for window-driven events to avoid UI jitter during polling
+      if (triggerEl.hasAttribute("fuse:window-on")) {
+        globalLoading = false;
       }
     }
 
@@ -611,6 +724,22 @@ const Fuse = {
         res = text ? JSON.parse(text) : {};
       } catch (e) {
         console.error("Fuse Parse Error:", e, "Response:", text);
+        // If the response is not JSON, it might be a fatal PHP error HTML or dd() output.
+        if (
+          text.includes("Fatal error") ||
+          text.includes("Exception") ||
+          text.includes("Stack trace") ||
+          text.includes("[dd #") ||
+          text.includes("sf-dump")
+        ) {
+          this.showErrorModal(text);
+        }
+        return;
+      }
+
+      // Handle Error Overlay
+      if (res.error_html) {
+        this.showErrorModal(res.error_html);
         return;
       }
 
@@ -625,15 +754,27 @@ const Fuse = {
       }
 
       if (res.html) {
-        this.updateDom(component.el, res.html);
-        if (res.data) {
-          component.data = res.data;
-        }
+        this.scheduler.push(() => {
+          this.updateDom(component.el, res.html);
+          if (res.data) {
+            component.data = res.data;
+          }
+        });
+
         if (res.events) {
           res.events.forEach((event) => {
-            window.dispatchEvent(
-              new CustomEvent(event.name, { detail: event.detail })
-            );
+            this.scheduler.push(() => {
+              window.dispatchEvent(
+                new CustomEvent(event.name, { detail: event.detail })
+              );
+            });
+          });
+        }
+        if (res.native_events) {
+          res.native_events.forEach((event) => {
+            this.scheduler.push(() => {
+              this.dispatchNative(event.name, event.detail);
+            });
           });
         }
       }
@@ -669,6 +810,8 @@ const Fuse = {
     const id = newEl.getAttribute("fuse:id");
     this.components[id].el = newEl;
     this.attachListeners(newEl, id);
+    // After DOM replacement, flush any buffered native events to ensure UI updates apply to new nodes
+    this.flushBufferedNativeEvents();
   },
 
   /**
@@ -682,5 +825,88 @@ const Fuse = {
         .querySelector('meta[name="csrf-token"]')
         ?.getAttribute("content") || ""
     );
+  },
+
+  /**
+   * Dispatch a native event to the Android/iOS bridge.
+   *
+   * @param {string} event
+   * @param {Object} detail
+   * @param {number} attempts
+   */
+  dispatchNative(event, detail = {}, attempts = 0) {
+    console.log(
+      `⚡ Dispatching Native Event (Attempt ${attempts + 1}):`,
+      event,
+      detail
+    );
+
+    // Convert detail to JSON string for the bridge
+    const payload = JSON.stringify(detail);
+
+    if (window.AndroidBridge && window.AndroidBridge.dispatch) {
+      window.AndroidBridge.dispatch(event, payload);
+    } else if (
+      window.webkit &&
+      window.webkit.messageHandlers &&
+      window.webkit.messageHandlers.iosBridge
+    ) {
+      window.webkit.messageHandlers.iosBridge.postMessage({
+        event: event,
+        payload: payload,
+      });
+    } else {
+      console.warn("Native bridge not found. Event:", event);
+      // Retry for up to 2 seconds if bridge is missing (common in initial load)
+      if (attempts < 10) {
+        setTimeout(() => {
+          this.dispatchNative(event, detail, attempts + 1);
+        }, 200);
+      } else {
+        console.error("Native bridge failed to load after 10 attempts.");
+      }
+    }
+  },
+
+  /**
+   * Show error modal overlay
+   * @param {string} html
+   */
+  showErrorModal(html) {
+    // Remove existing overlay if any
+    const existing = document.getElementById("fuse-error-overlay");
+    if (existing) existing.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "fuse-error-overlay";
+
+    // If the HTML is a raw PHP error string (not wrapped in our div), wrap it
+    if (!html.trim().startsWith('<div style="position:fixed')) {
+      overlay.style.cssText =
+        "position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;overflow:auto;padding:20px;display:flex;align-items:center;justify-content:center;";
+      overlay.innerHTML = `<div style="background:white;padding:20px;border-radius:8px;max-width:90%;max-height:90%;overflow:auto;color:black;">${html}</div><button onclick="this.parentElement.parentElement.remove()" style="position:fixed;top:20px;right:20px;padding:10px;background:#ef4444;color:white;border:none;border-radius:4px;cursor:pointer;">Close</button>`;
+    } else {
+      // Our formatted HTML
+      overlay.innerHTML = html;
+    }
+
+    document.body.appendChild(overlay);
+  },
+
+  /**
+   * Flush buffered native events captured by the injected bridge before components were ready.
+   */
+  flushBufferedNativeEvents() {
+    if (!window.__nativeEventBuffer || window.__nativeEventBuffer.length === 0)
+      return;
+    try {
+      const buffer = window.__nativeEventBuffer.splice(
+        0,
+        window.__nativeEventBuffer.length
+      );
+      buffer.forEach((evt) => {
+        window.dispatchEvent(new CustomEvent(evt.name, { detail: evt.detail }));
+      });
+    } catch (err) {}
   },
 };

@@ -53,7 +53,8 @@ class NativeActionCoordinator : Fragment() {
         }
     }
 
-    private fun dispatch(event: String, payloadJson: String) {
+    fun dispatch(event: String, payloadJson: String) {
+        activity?.runOnUiThread {
             Log.d("JSFUNC", "native:$event");
             Log.d("JSFUNC", "$payloadJson");
             val eventForJs = event.replace("\\", "\\\\")
@@ -93,8 +94,14 @@ class NativeActionCoordinator : Fragment() {
 
             Log.d("NativeActionCoordinator", "📢 Dispatching JS event: $event")
 
-            (activity as? WebViewProvider)?.getWebView()?.evaluateJavascript(js, null)
+            val webView = (activity as? WebViewProvider)?.getWebView()
+            if (webView != null) {
+                webView.evaluateJavascript(js, null)
+            } else {
+                Log.e("NativeActionCoordinator", "❌ WebView is null! Cannot dispatch event: $event")
+            }
         }
+    }
 
 
     companion object {
@@ -111,9 +118,11 @@ class NativeActionCoordinator : Fragment() {
          * This is a helper method for activities/fragments that need to dispatch events
          */
         fun dispatchEvent(activity: FragmentActivity, event: String, payloadJson: String) {
-            Log.d("NativeActionCoordinator", "📢 Static dispatch event: $event")
-            val coordinator = install(activity)
-            coordinator.dispatch(event, payloadJson)
+            activity.runOnUiThread {
+                Log.d("NativeActionCoordinator", "📢 Static dispatch event: $event")
+                val coordinator = install(activity)
+                coordinator.dispatch(event, payloadJson)
+            }
         }
     }
 }

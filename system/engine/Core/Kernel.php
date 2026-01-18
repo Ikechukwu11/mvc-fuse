@@ -1,4 +1,5 @@
 <?php
+
 namespace Engine\Core;
 
 use Engine\Http\Router;
@@ -212,7 +213,7 @@ class Kernel
      */
     protected function sendResponse(int $status, $body)
     {
-        if ($body instanceof \Engine\Response) {
+        if ($body instanceof Response) {
             $body->send();
             return;
         }

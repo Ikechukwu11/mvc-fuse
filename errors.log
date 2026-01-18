@@ -1,0 +1,594 @@
+[09-Jan-2026 01:26:42 UTC] PHP Fatal error:  Uncaught Error: Call to a member function withStatusBar() on string in D:\htdocs\php\mvc\app\Controllers\HomeController.php:8
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 01:26:44 UTC] PHP Fatal error:  Uncaught Error: Call to a member function withStatusBar() on string in D:\htdocs\php\mvc\app\Controllers\HomeController.php:8
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 01:36:52 UTC] PHP Fatal error:  Uncaught Error: Call to a member function withStatusBar() on string in D:\htdocs\php\mvc\app\Controllers\HomeController.php:8
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:00:12 UTC] PHP Fatal error:  Cannot redeclare function getRandomColor() (previously declared in D:\htdocs\php\mvc\system\engine\Support\helpers.php:268) in D:\htdocs\php\mvc\views\layouts\main.php on line 45
+[09-Jan-2026 02:00:48 UTC] PHP Fatal error:  Uncaught Error: Call to a member function withStatusBar() on string in D:\htdocs\php\mvc\app\Controllers\HomeController.php:8
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:03:10 UTC] PHP Fatal error:  Class App\Fuse\BaseFuse contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (Engine\Fuse\Component::render) in D:\htdocs\php\mvc\app\Fuse\BaseFuse.php on line 6
+[09-Jan-2026 02:03:41 UTC] PHP Deprecated:  Creation of dynamic property App\Fuse\NativeDemo\Index::$randomColor is deprecated in D:\htdocs\php\mvc\app\Fuse\BaseFuse.php on line 9
+[09-Jan-2026 02:04:23 UTC] PHP Parse error:  syntax error, unexpected variable "$this", expecting "function" in D:\htdocs\php\mvc\app\Fuse\BaseFuse.php on line 8
+[09-Jan-2026 02:08:03 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 02:08:24 UTC] PHP Warning:  Undefined variable $route in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:11:34 UTC] PHP Warning:  Undefined variable $current_route in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:11:34 UTC] PHP Fatal error:  Uncaught Error: Value of type null is not callable in D:\htdocs\php\mvc\app\Controllers\HomeController.php:8
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:19:46 UTC] PHP Warning:  Undefined property: App\Controllers\HomeController::$router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:19:46 UTC] PHP Fatal error:  Uncaught Error: Call to a member function route() on null in D:\htdocs\php\mvc\app\Controllers\HomeController.php:8
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 8
+[09-Jan-2026 02:25:57 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function App\Controllers\app() in D:\htdocs\php\mvc\app\Controllers\HomeController.php:9
+Stack trace:
+#0 [internal function]: App\Controllers\HomeController->index()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(204): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():64}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(135): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(139): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():131}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(64): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(17): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:26:43 UTC] PHP Warning:  Undefined variable $router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:28:24 UTC] PHP Warning:  Undefined variable $router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:30:15 UTC] PHP Warning:  Undefined variable $router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:30:17 UTC] PHP Warning:  Undefined variable $router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:32:03 UTC] PHP Warning:  Undefined variable $router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:32:05 UTC] PHP Warning:  Undefined variable $router in D:\htdocs\php\mvc\app\Controllers\HomeController.php on line 9
+[09-Jan-2026 02:33:36 UTC] PHP Fatal error:  Uncaught Error: Call to a member function name() on null in D:\htdocs\php\mvc\routes\web.php:16
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(47): require_once()
+#1 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#2 {main}
+  thrown in D:\htdocs\php\mvc\routes\web.php on line 16
+[09-Jan-2026 02:35:39 UTC] PHP Fatal error:  Uncaught TypeError: Engine\Http\Router::get(): Return value must be of type Engine\Http\Router, none returned in D:\htdocs\php\mvc\system\engine\Http\Router.php:92
+Stack trace:
+#0 D:\htdocs\php\mvc\routes\web.php(16): Engine\Http\Router->get('/', Array)
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(47): require_once('D:\\htdocs\\php\\m...')
+#2 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#3 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 92
+[09-Jan-2026 02:36:01 UTC] PHP Fatal error:  Uncaught Error: Call to a member function name() on null in D:\htdocs\php\mvc\routes\web.php:16
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(47): require_once()
+#1 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#2 {main}
+  thrown in D:\htdocs\php\mvc\routes\web.php on line 16
+[09-Jan-2026 02:37:02 UTC] PHP Fatal error:  Uncaught TypeError: Engine\Http\Router::get(): Return value must be of type Engine\Http\Router, none returned in D:\htdocs\php\mvc\system\engine\Http\Router.php:92
+Stack trace:
+#0 D:\htdocs\php\mvc\routes\web.php(16): Engine\Http\Router->get('/', Array)
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(47): require_once('D:\\htdocs\\php\\m...')
+#2 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#3 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 92
+[09-Jan-2026 02:38:56 UTC] PHP Fatal error:  Uncaught TypeError: Engine\Http\Router::get(): Return value must be of type Engine\Http\Router, none returned in D:\htdocs\php\mvc\system\engine\Http\Router.php:92
+Stack trace:
+#0 D:\htdocs\php\mvc\routes\web.php(16): Engine\Http\Router->get('/', Array)
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(47): require_once('D:\\htdocs\\php\\m...')
+#2 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#3 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 92
+[09-Jan-2026 02:43:44 UTC] PHP Fatal error:  Uncaught Error: Call to a member function name() on null in D:\htdocs\php\mvc\routes\web.php:16
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(47): require_once()
+#1 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#2 {main}
+  thrown in D:\htdocs\php\mvc\routes\web.php on line 16
+[09-Jan-2026 02:54:20 UTC] PHP Parse error:  syntax error, unexpected token "|", expecting variable in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 38
+[09-Jan-2026 02:55:06 UTC] PHP Fatal error:  Property Engine\Http\Router::$fallbackHandler cannot have type callable|array in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 38
+[09-Jan-2026 02:55:21 UTC] PHP Parse error:  syntax error, unexpected token "|", expecting variable in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 38
+[09-Jan-2026 02:56:23 UTC] PHP Parse error:  syntax error, unexpected token "|", expecting variable in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 38
+[09-Jan-2026 02:57:42 UTC] PHP Parse error:  syntax error, unexpected token "|", expecting variable in D:\htdocs\php\mvc\system\engine\Http\Router.php on line 38
+[09-Jan-2026 03:00:04 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Engine\Http\Router::setPrefix() in D:\htdocs\php\mvc\system\engine\Core\Kernel.php:112
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(50): Engine\Core\Kernel->loadApiRoutes(Object(Engine\Http\Router))
+#1 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#2 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Core\Kernel.php on line 112
+[09-Jan-2026 03:17:46 UTC] PHP Fatal error:  Constant expression contains invalid operations in D:\htdocs\php\mvc\app\Fuse\Home.php on line 7
+[09-Jan-2026 03:19:02 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:20:10 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:20:13 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:24:32 UTC] PHP Fatal error:  Constant expression contains invalid operations in D:\htdocs\php\mvc\app\Fuse\Home.php on line 7
+[09-Jan-2026 03:25:50 UTC] PHP Fatal error:  Uncaught Error: Typed property App\Fuse\Home::$current_route must not be accessed before initialization in D:\htdocs\php\mvc\app\Fuse\Home.php:14
+Stack trace:
+#0 [internal function]: App\Fuse\Home->render()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Fuse\Home.php on line 14
+[09-Jan-2026 03:26:22 UTC] PHP Fatal error:  Uncaught Error: Typed property App\Fuse\Home::$current_route must not be accessed before initialization in D:\htdocs\php\mvc\app\Fuse\Home.php:15
+Stack trace:
+#0 [internal function]: App\Fuse\Home->render()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Fuse\Home.php on line 15
+[09-Jan-2026 03:26:50 UTC] PHP Fatal error:  Uncaught Error: Typed property App\Fuse\Home::$current_route must not be accessed before initialization in D:\htdocs\php\mvc\app\Fuse\Home.php:14
+Stack trace:
+#0 [internal function]: App\Fuse\Home->render()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Fuse\Home.php on line 14
+[09-Jan-2026 03:27:10 UTC] PHP Fatal error:  Uncaught Error: Typed property App\Fuse\Home::$current_route must not be accessed before initialization in D:\htdocs\php\mvc\app\Fuse\Home.php:14
+Stack trace:
+#0 [internal function]: App\Fuse\Home->render()
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Array, Array)
+#2 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Array, Array, Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#11 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#12 {main}
+  thrown in D:\htdocs\php\mvc\app\Fuse\Home.php on line 14
+[09-Jan-2026 03:29:24 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:29:25 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:29:29 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:29:31 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:29:37 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:29:40 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:33:14 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:33:18 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 77
+[09-Jan-2026 03:34:17 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 64
+[09-Jan-2026 03:36:24 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 64
+[09-Jan-2026 03:36:25 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 64
+[09-Jan-2026 03:36:50 UTC] PHP Warning:  Undefined variable $statusBarColor in D:\htdocs\php\mvc\views\layouts\main.php on line 64
+[09-Jan-2026 03:39:02 UTC] PHP Warning:  Undefined variable $statusBarColor in D:\htdocs\php\mvc\views\layouts\main.php on line 64
+[09-Jan-2026 03:39:04 UTC] PHP Warning:  Undefined variable $statusBarColor in D:\htdocs\php\mvc\views\layouts\main.php on line 64
+[09-Jan-2026 03:43:47 UTC] PHP Fatal error:  Declaration of App\Fuse\Home::mount() must be compatible with App\Fuse\BaseFuse::mount(): void in D:\htdocs\php\mvc\app\Fuse\Home.php on line 8
+[09-Jan-2026 03:47:07 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\web.php(154): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:D:\htdocs\php\mvc\routes\web.php:153}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 03:51:29 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 03:51:49 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 04:23:44 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 04:23:53 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 04:35:34 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 04:35:52 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 04:35:56 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 04:38:43 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 05:02:36 UTC] PHP Deprecated:  str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in D:\htdocs\php\mvc\system\engine\Support\helpers.php on line 46
+[09-Jan-2026 05:02:36 UTC] PHP Deprecated:  str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in D:\htdocs\php\mvc\system\engine\Support\helpers.php on line 46
+[09-Jan-2026 05:04:12 UTC] PHP Deprecated:  str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in D:\htdocs\php\mvc\system\engine\Support\helpers.php on line 46
+[09-Jan-2026 05:04:12 UTC] PHP Deprecated:  str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in D:\htdocs\php\mvc\system\engine\Support\helpers.php on line 46
+[09-Jan-2026 05:15:42 UTC] PHP Fatal error:  Declaration of App\Fuse\RandomUsers::placeholder(): string must be compatible with Engine\Fuse\Component::placeholder(array $params = []): string in D:\htdocs\php\mvc\app\Fuse\RandomUsers.php on line 175
+[09-Jan-2026 05:18:52 UTC] PHP Fatal error:  Declaration of App\Fuse\RandomUsers::placeholder(array $params = []) must be compatible with Engine\Fuse\Component::placeholder(array $params = []): string in D:\htdocs\php\mvc\app\Fuse\RandomUsers.php on line 175
+[09-Jan-2026 05:32:08 UTC] PHP Warning:  Undefined variable $route in D:\htdocs\php\mvc\app\Fuse\Docs.php on line 259
+[09-Jan-2026 05:32:08 UTC] PHP Fatal error:  Uncaught Error: Value of type null is not callable in D:\htdocs\php\mvc\app\Fuse\Docs.php:259
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(597): App\Fuse\Docs->render()
+#1 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#2 D:\htdocs\php\mvc\routes\mobile.php(42): Engine\Fuse\Component::renderPage(Array)
+#3 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:11}:40}(Object(Engine\Http\Request))
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#5 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#7 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#8 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#9 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#10 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#13 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#14 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#15 {main}
+  thrown in D:\htdocs\php\mvc\app\Fuse\Docs.php on line 259
+[09-Jan-2026 05:39:39 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(123): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:122}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 05:40:10 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 05:48:39 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(123): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:122}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 05:48:49 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 05:48:54 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 05:52:26 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\system\engine\Fuse\helpers.php on line 13
+[09-Jan-2026 05:52:28 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\system\engine\Fuse\helpers.php on line 13
+[09-Jan-2026 06:03:02 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(123): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:122}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:05:11 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 81
+[09-Jan-2026 06:05:11 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 06:06:01 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 81
+[09-Jan-2026 06:06:01 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 06:06:05 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(123): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:122}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:06:08 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 81
+[09-Jan-2026 06:06:08 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 96
+[09-Jan-2026 06:06:34 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:17:16 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:18:19 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:18:21 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:18:40 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:18:41 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(700): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:25:39 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(701): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:25:40 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(701): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:25:40 UTC] PHP Fatal error:  Uncaught Error: Typed property Engine\Fuse\Component::$id must not be accessed before initialization in D:\htdocs\php\mvc\system\engine\Fuse\Component.php:601
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Fuse\Component.php(701): Engine\Fuse\Component->output()
+#1 D:\htdocs\php\mvc\routes\mobile.php(136): Engine\Fuse\Component::renderPage()
+#2 [internal function]: Engine\Core\Kernel->{closure:{closure:D:\htdocs\php\mvc\routes\mobile.php:12}:135}()
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(205): call_user_func_array(Object(Closure), Array)
+#4 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(66): Engine\Core\Kernel->dispatch(Object(Closure), Array, Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::handle():65}(Object(Engine\Http\Request))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#7 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#8 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#9 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#10 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#11 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#12 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#13 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#14 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Fuse\Component.php on line 601
+[09-Jan-2026 06:26:38 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 85
+[09-Jan-2026 06:26:38 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 100
+[09-Jan-2026 06:39:22 UTC] PHP Fatal error:  Uncaught Error: Call to a member function handle() on array in D:\htdocs\php\mvc\system\engine\Core\Kernel.php:136
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Http\Middleware\CsrfMiddleware.php(14): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#1 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\CsrfMiddleware->handle(Object(Engine\Http\Request), Object(Closure))
+#2 D:\htdocs\php\mvc\system\engine\Http\Middleware\TrimStrings.php(17): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#3 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\TrimStrings->handle(Object(Engine\Http\Request), Object(Closure))
+#4 D:\htdocs\php\mvc\system\engine\Http\Middleware\JsonBodyParser.php(22): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#5 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(136): Engine\Http\Middleware\JsonBodyParser->handle(Object(Engine\Http\Request), Object(Closure))
+#6 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(140): Engine\Core\Kernel->{closure:Engine\Core\Kernel::runMiddleware():132}(Object(Engine\Http\Request))
+#7 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(65): Engine\Core\Kernel->runMiddleware(Object(Engine\Http\Request), Array, Object(Closure))
+#8 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#9 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Core\Kernel.php on line 136
+[09-Jan-2026 06:54:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Engine\Http\Router::setPrefix() in D:\htdocs\php\mvc\system\engine\Core\Kernel.php:113
+Stack trace:
+#0 D:\htdocs\php\mvc\system\engine\Core\Kernel.php(51): Engine\Core\Kernel->loadApiRoutes(Object(Engine\Http\Router))
+#1 D:\htdocs\php\mvc\public\index.php(18): Engine\Core\Kernel->handle(Object(Engine\Http\Request))
+#2 {main}
+  thrown in D:\htdocs\php\mvc\system\engine\Core\Kernel.php on line 113
+[09-Jan-2026 08:03:10 UTC] PHP Fatal error:  Declaration of App\Fuse\Home::mount() must be compatible with App\Fuse\BaseFuse::mount(): void in D:\htdocs\php\mvc\app\Fuse\Home.php on line 9
+[09-Jan-2026 08:20:41 UTC] PHP Fatal error:  Declaration of App\Fuse\TodoList::mount() must be compatible with App\Fuse\BaseFuse::mount(): void in D:\htdocs\php\mvc\app\Fuse\TodoList.php on line 12
+[09-Jan-2026 08:21:31 UTC] PHP Fatal error:  Declaration of App\Fuse\TodoList::mount() must be compatible with App\Fuse\BaseFuse::mount(): void in D:\htdocs\php\mvc\app\Fuse\TodoList.php on line 12
+[09-Jan-2026 08:22:08 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 89
+[09-Jan-2026 08:22:08 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 104
+[09-Jan-2026 08:22:52 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 89
+[09-Jan-2026 08:22:52 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 104
+[09-Jan-2026 08:23:09 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 89
+[09-Jan-2026 08:23:09 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 104
+[09-Jan-2026 08:25:20 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 89
+[09-Jan-2026 08:25:20 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 104
+[09-Jan-2026 08:26:20 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 89
+[09-Jan-2026 08:26:20 UTC] PHP Warning:  Undefined variable $randomColor in D:\htdocs\php\mvc\views\layouts\main.php on line 104
+[09-Jan-2026 08:33:40 UTC] PHP Fatal error:  Constant expression contains invalid operations in D:\htdocs\php\mvc\app\Fuse\Counter.php on line 17
+[09-Jan-2026 09:27:06 UTC] PHP Warning:  Undefined global variable $__randomColor in D:\htdocs\php\mvc\app\Fuse\BaseFuse.php on line 25
+[09-Jan-2026 09:27:06 UTC] PHP Warning:  Undefined global variable $__randomColor in D:\htdocs\php\mvc\app\Fuse\BaseFuse.php on line 25

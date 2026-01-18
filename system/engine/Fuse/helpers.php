@@ -8,21 +8,39 @@
  *
  * @return string HTML script/style tags
  */
-function fuse_scripts(): string
+function fuse_scripts($randomColor = ''): string
 {
     // Adjust path if base path is set
     $base = config('app.base_path', '');
     $config = config('fuse.loading', ['enabled' => true, 'color' => '#4F46E5', 'height' => '3px']);
+    if ($randomColor) {
+        $config['color'] = $randomColor;
+    }
+
     $configJson = json_encode($config);
 
-    $script = <<<HTML
-<script>
-    window.FuseConfig = {
-        loading: {$configJson}
-    };
-</script>
-<script src="{$base}/js/fuse.js"></script>
-HTML;
+    // Flush initial native events
+    $nativeEvents = \Native\Mobile\Native::flush();
+    $nativeEventsJson = json_encode($nativeEvents);
+
+    // Debug logging for initial events
+    if (!empty($nativeEvents)) {
+        $log = new \Engine\Core\Logger();
+        $log->info("Fuse Initial Native Events", $nativeEvents);
+    }
+
+    $script =
+        <<<HTML
+        <script>
+            window.FuseConfig = {
+                loading: {$configJson},
+                initialNativeEvents: {$nativeEventsJson}
+            };
+            console.log("FuseConfig loaded", window.FuseConfig);
+        </script>
+        <script src="{$base}/js/scheduler.js"></script>
+        <script src="{$base}/js/fuse.js"></script>
+    HTML;
 
     if ($config['enabled']) {
         $color = $config['color'];

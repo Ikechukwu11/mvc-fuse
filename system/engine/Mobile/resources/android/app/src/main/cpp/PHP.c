@@ -9,9 +9,25 @@
 static php_stream *g_stdout_stream = NULL;
 extern void pipe_php_output(const char* str);
 
-void initialize_php_with_request(const char *post_data, const char *method, const char *uri) {
+void initialize_php_with_request(const char *post_data, const char *method, const char *uri, const char *content_type) {
     LOGI("🛠️ Starting PHP request startup");
-    LOGI("🐛 initialize_php_with_request called with method=%s uri=%s body=%s", method, uri, post_data);
+    LOGI("🐛 initialize_php_with_request called with method=%s uri=%s ct=%s", method, uri, content_type ? content_type : "NULL");
+
+    // Step 0: Pre-fill SG(request_info) BEFORE startup
+    // This is CRITICAL for session persistence so PHP sees the cookie during startup
+    SG(request_info).request_method = method;
+    SG(request_info).request_uri = (char*)uri;
+    SG(request_info).content_type = (char*)content_type;
+    SG(request_info).content_length = post_data ? strlen(post_data) : 0;
+    SG(request_info).proto_num = 1001; // HTTP/1.1
+
+    const char* cookie_header = getenv("HTTP_COOKIE");
+    if (cookie_header) {
+        SG(request_info).cookie_data = (char*)cookie_header;
+        LOGI("🍪 Pre-set SG(request_info).cookie_data: %s", cookie_header);
+    } else {
+        LOGI("🚫 No HTTP_COOKIE found in environment for SG setup");
+    }
 
     // Step 1: Bootstrap PHP internals (superglobals, session, etc)
     if (php_request_startup() == FAILURE) {
@@ -43,14 +59,9 @@ void initialize_php_with_request(const char *post_data, const char *method, cons
     zend_hash_str_update(&EG(symbol_table), "_SERVER", sizeof("_SERVER") - 1, &server_array);
     LOGI("✅ $_SERVER populated");
 
-    // Step 3: Populate $_COOKIE from HTTP_COOKIE env var
-    const char* cookie_header = getenv("HTTP_COOKIE");
-    LOGI("🍪 PHP.c: getenv('HTTP_COOKIE') returned: %s", cookie_header ? cookie_header : "(null)");
-
+    // Step 3: Populate $_COOKIE manually (backup/ensure)
+    // Even though we set cookie_data, we manually ensure _COOKIE is populated correctly
     if (cookie_header) {
-        SG(request_info).cookie_data = (char*)cookie_header;
-        LOGI("🍪 HTTP_COOKIE from env: %s", cookie_header);
-
         zval cookie_array;
         array_init(&cookie_array);
 
@@ -63,26 +74,15 @@ void initialize_php_with_request(const char *post_data, const char *method, cons
                 *equal = '\0';
                 const char* key = token;
                 const char* val = equal + 1;
-                LOGI("🍪 Parsed cookie → %s = %s", key, val);
+                // LOGI("🍪 Parsed cookie → %s = %s", key, val);
                 add_assoc_string(&cookie_array, key, val);
-            } else {
-                LOGI("⚠️ Skipping malformed cookie token: %s", token);
             }
             token = strtok(NULL, ";");
         }
         free(cookies);
 
         zend_hash_str_update(&EG(symbol_table), "_COOKIE", sizeof("_COOKIE") - 1, &cookie_array);
-        LOGI("✅ $_COOKIE populated from HTTP_COOKIE");
-    } else {
-        LOGI("🚫 No HTTP_COOKIE found in environment");
-
-        // Try to get from superglobal just in case PHP populated it (unlikely with embed)
-        /*
-        if (zend_hash_str_exists(&EG(symbol_table), "_COOKIE", sizeof("_COOKIE") - 1)) {
-             LOGI("❓ _COOKIE exists in symbol table despite no env var?");
-        }
-        */
+        LOGI("✅ $_COOKIE manually populated from HTTP_COOKIE");
     }
 
     // Step 4: Setup PHP output buffer (stdout stream)
@@ -108,28 +108,36 @@ void initialize_php_with_request(const char *post_data, const char *method, cons
 
         LOGI("📮 Detected POST request");
         LOGI("📦 POST body length: %zu", post_data_length);
-        LOGI("📦 POST body preview (first 200 chars): %.200s", post_data);
 
         php_stream *mem_stream = php_stream_memory_create(TEMP_STREAM_DEFAULT);
         php_stream_write(mem_stream, post_data, post_data_length);
 
         SG(request_info).request_body = mem_stream;
-        SG(request_info).content_length = post_data_length;
+        // content_length/type already set in Step 0
 
-        const char *content_type = getenv("CONTENT_TYPE");
+        // Fallback logic from previous working build
+        // If content_type is missing OR if it's not JSON, force application/x-www-form-urlencoded
+        // This ensures traditional forms (which might miss the header or be generic) are parsed correctly
         if (content_type && strstr(content_type, "json")) {
             SG(request_info).content_type = "application/json";
-            LOGI("📄 Set PHP content type to application/json (from CONTENT_TYPE=%s)", content_type);
         } else {
+            // Force urlencoded for everything else (traditional forms)
             SG(request_info).content_type = "application/x-www-form-urlencoded";
-            LOGI("📄 Set PHP content type to application/x-www-form-urlencoded (CONTENT_TYPE=%s)", content_type ? content_type : "null");
+            LOGI("📄 Enforcing application/x-www-form-urlencoded (Old Build Behavior)");
+        }
+
+        // Re-fetch content_type from SG as we might have changed it
+        content_type = SG(request_info).content_type;
+
+        // Populate $_POST for urlencoded forms (fallback to method if content-type missing)
+        if ((content_type && strstr(content_type, "application/x-www-form-urlencoded")) ||
+            (strcmp(method, "POST") == 0 || strcmp(method, "PUT") == 0 || strcmp(method, "PATCH") == 0)) {
+            sapi_module.treat_data(PARSE_POST, (char*)post_data, NULL);
+            LOGI("✅ Parsed POST form data into $_POST");
         }
     }
 
-
-    // Finalize request startup state
-    SG(request_info).request_uri = strdup(uri);
-    SG(request_info).request_method = method;
+    // Finalize request startup state (redundant but safe)
     PG(during_request_startup) = 0;
     EG(exit_status) = 0;
 }
@@ -173,6 +181,47 @@ void capture_php_stdout_output() {
     }
 }
 
+// Helper to write headers to the output stream
+static void android_send_header(sapi_header_struct *sapi_header, void *server_context) {
+    if (sapi_header && g_stdout_stream) {
+        // LOGI("📤 Sending header: %s", sapi_header->header);
+        php_stream_write(g_stdout_stream, sapi_header->header, strlen(sapi_header->header));
+        php_stream_write(g_stdout_stream, "\r\n", 2);
+    }
+}
+
+// Helper to send all headers including status line
+static int android_send_headers(sapi_headers_struct *sapi_headers) {
+    if (!g_stdout_stream) return SAPI_HEADER_SEND_FAILED;
+
+    char buf[1024];
+    // Simple status line construction
+    int response_code = SG(sapi_headers).http_response_code;
+    if (response_code == 0) response_code = 200;
+
+    // Note: We could map status codes to text (e.g. 200 OK, 404 Not Found),
+    // but for now "OK" or just the code is often sufficient for the bridge parser
+    // which primarily looks at the code.
+    // However, proper HTTP requires a reason phrase.
+    const char* reason = "OK";
+    if (response_code == 302) reason = "Found";
+    else if (response_code == 404) reason = "Not Found";
+    else if (response_code == 500) reason = "Internal Server Error";
+
+    snprintf(buf, sizeof(buf), "HTTP/1.1 %d %s\r\n", response_code, reason);
+    php_stream_write(g_stdout_stream, buf, strlen(buf));
+
+    // Iterate and send all headers
+    zend_llist_apply_with_argument(&SG(sapi_headers).headers,
+                                   (llist_apply_with_arg_func_t) android_send_header,
+                                   NULL);
+
+    // End of headers section
+    php_stream_write(g_stdout_stream, "\r\n", 2);
+
+    return SAPI_HEADER_SENT_SUCCESSFULLY;
+}
+
 static sapi_module_struct php_module = {
         "android",                     // name
         "Android Embedded PHP",        // pretty name
@@ -190,8 +239,8 @@ static sapi_module_struct php_module = {
 
         NULL,                         // sapi error handler
         NULL,                         // header handler
-        NULL,                         // send headers handler
-        NULL,                         // send header handler
+        android_send_headers,         // send headers handler
+        android_send_header,          // send header handler
 
         NULL,                         // read POST data
         NULL,                         // read Cookies

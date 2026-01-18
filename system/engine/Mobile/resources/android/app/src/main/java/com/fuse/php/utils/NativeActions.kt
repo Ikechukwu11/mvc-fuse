@@ -31,6 +31,7 @@ object NativeActions {
                 val alertBuilder = AlertDialog.Builder(context)
                     .setTitle(title)
                     .setMessage(message)
+                    .setIcon(context.applicationInfo.icon)
 
                 // If no buttons provided, default to "OK"
                 val buttonLabels = if (buttons.isEmpty()) arrayOf("OK") else buttons

@@ -2,6 +2,7 @@
 
 namespace App\Fuse;
 
+use App\Fuse\BaseFuse;
 use Engine\Fuse\Component;
 
 /**
@@ -10,7 +11,7 @@ use Engine\Fuse\Component;
  * Renders a responsive documentation page with navbar, sidebar, content area,
  * and live search powered by Fuse events.
  */
-class Docs extends Component
+class Docs extends BaseFuse
 {
     /**
      * Layout used for full-page rendering.
@@ -65,8 +66,9 @@ class Docs extends Component
      *
      * @return void
      */
-    public function mount()
+    public function mount(): void
     {
+        $this->useStatusBar('#FE7F00', 'dark', true);
         // Respect initial section if provided (e.g., from querystring via route)
         if (empty($this->current)) {
             $this->current = 'introduction';
@@ -231,7 +233,7 @@ HTML;
                 foreach ($sec['anchors'] as $anc) {
                     $ancTitle = htmlspecialchars($anc['title'], ENT_QUOTES, 'UTF-8');
                     $ancId = htmlspecialchars($anc['id'], ENT_QUOTES, 'UTF-8');
-                    $href = "/docs?section={$sec['slug']}#{$ancId}";
+                    $href = "{$this->basepath}docs?section={$sec['slug']}#{$ancId}";
                     $anchorsHtml .= <<<HTML
                     <a href="{$href}" class="docs-anchor-link" fuse:navigate.hover style="display:block; padding:6px 10px; margin-left:8px; border-radius:6px; color:#334; text-decoration:none;">{$ancTitle}</a>
 HTML;
@@ -255,7 +257,7 @@ HTML;
         <div style="display:flex; flex-direction:column; min-height:100vh;">
             <header style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid #e7e9f3; position:sticky; top:0; background:linear-gradient(180deg,#ffffff,#f6f7ff); z-index:10;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <a href="/" fuse:navigate style="text-decoration:none; color:#1d2dd9; font-weight:800;">Fuse</a>
+                    <a href="./" fuse:navigate style="text-decoration:none; color:#1d2dd9; font-weight:800;">Fuse</a>
                     <span style="color:#5a61ea; font-weight:600;">Docs</span>
                 </div>
                 <div style="flex:1; max-width:560px; margin:0 12px;">

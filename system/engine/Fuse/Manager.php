@@ -4,6 +4,7 @@ namespace Engine\Fuse;
 
 use Engine\Http\Request;
 use Engine\Http\Response;
+use Native\Mobile\Native;
 
 /**
  * Fuse Manager
@@ -63,49 +64,92 @@ class Manager
         // Lifecycle: hydrated
         $component->hydrated();
 
-        // Perform action if any
-        // Special actions: $refresh / $commit trigger a re-render without calling a method
-        if ($action === '$refresh' || $action === '$commit') {
-            $action = null;
-        }
-        if ($action && method_exists($component, $action)) {
-            // Ensure params is an array
-            if (!is_array($params)) {
-                $params = [$params];
+        try {
+            // Perform action if any
+            // Special actions: $refresh / $commit trigger a re-render without calling a method
+            if ($action === '$refresh' || $action === '$commit') {
+                $action = null;
             }
-            try {
-                call_user_func_array([$component, $action], $params);
-            } catch (ValidationException $e) {
-                foreach ($e->getErrors() as $field => $msg) {
-                    $component->addError($field, $msg);
+            if ($action && method_exists($component, $action)) {
+                // Ensure params is an array
+                if (!is_array($params)) {
+                    $params = [$params];
                 }
-            } catch (\Throwable $e) {
-                $stop = false;
-                $component->exception($e, $stop);
-                if (!$stop) {
-                    throw $e;
+                try {
+                    call_user_func_array([$component, $action], $params);
+                } catch (ValidationException $e) {
+                    foreach ($e->getErrors() as $field => $msg) {
+                        $component->addError($field, $msg);
+                    }
+                } catch (\Throwable $e) {
+                    $stop = false;
+                    $component->exception($e, $stop);
+                    if (!$stop) {
+                        throw $e;
+                    }
                 }
             }
-        }
 
-        // Check for redirect
-        if ($redirect = $component->getRedirectUrl()) {
-            return [
-                'redirect' => $redirect,
-                'navigate' => $component->getRedirectNavigate(),
+            // Check for redirect
+            if ($redirect = $component->getRedirectUrl()) {
+                return [
+                    'redirect' => $redirect,
+                    'navigate' => $component->getRedirectNavigate(),
+                ];
+            }
+
+            // Lifecycle: dehydrated
+            $component->dehydrated();
+
+            // Re-render
+            $html = $component->output();
+
+            $response = [
+                'html' => $html,
+                'data' => $component->getPublicProperties(), // Return updated data
+                'events' => $component->getEvents()
             ];
+
+            // Include any native calls
+            $nativeCalls = Native::flush();
+            if (!empty($nativeCalls)) {
+                $response['native_events'] = $nativeCalls;
+            }
+
+            return $response;
+
+        } catch (\Throwable $e) {
+            // If we are in debug mode, return the exception as a view overlay
+            if (env('APP_DEBUG', false)) {
+                $trace = $e->getTraceAsString();
+                $class = get_class($e);
+                $message = $e->getMessage();
+                $file = $e->getFile();
+                $line = $e->getLine();
+
+                $errorHtml = <<<HTML
+<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);color:#fff;z-index:99999;overflow:auto;font-family:monospace;padding:20px;">
+    <div style="background:#1f2937;border:1px solid #374151;border-radius:8px;padding:24px;max-width:900px;margin:40px auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px;">
+            <div>
+                <span style="background:#ef4444;color:white;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:bold;text-transform:uppercase;">$class</span>
+                <h2 style="margin:12px 0;font-size:20px;line-height:1.4;">$message</h2>
+            </div>
+            <button onclick="document.getElementById('fuse-error-overlay').remove()" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:24px;">&times;</button>
+        </div>
+        <div style="background:#111827;padding:16px;border-radius:6px;font-size:13px;color:#d1d5db;margin-bottom:20px;">
+            <div style="margin-bottom:8px;"><strong style="color:#60a5fa;">File:</strong> $file</div>
+            <div><strong style="color:#60a5fa;">Line:</strong> $line</div>
+        </div>
+        <div style="background:#000;padding:16px;border-radius:6px;overflow-x:auto;">
+            <pre style="margin:0;font-size:12px;color:#10b981;white-space:pre-wrap;">$trace</pre>
+        </div>
+    </div>
+</div>
+HTML;
+                return ['error_html' => $errorHtml];
+            }
+            throw $e;
         }
-
-        // Lifecycle: dehydrated
-        $component->dehydrated();
-
-        // Re-render
-        $html = $component->output();
-
-        return [
-            'html' => $html,
-            'data' => $component->getPublicProperties(), // Return updated data
-            'events' => $component->getEvents()
-        ];
     }
 }

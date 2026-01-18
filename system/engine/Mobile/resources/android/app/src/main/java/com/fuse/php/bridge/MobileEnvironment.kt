@@ -327,8 +327,11 @@ class MobileEnvironment(private val context: Context) {
         }
 
         // Placeholder for any initial runner commands if needed
-        File(appStorageDir, "persisted_data/storage/app/public")
-         phpBridge.runRunnerCommand("migrate --force")
+        val publicDir = File(appStorageDir, "persisted_data/storage/app/public")
+        if (!publicDir.exists()) {
+            publicDir.mkdirs()
+        }
+        phpBridge.runRunnerCommand("migrate --force")
     }
 
     private fun setupDirectories() {

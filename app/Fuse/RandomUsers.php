@@ -28,6 +28,8 @@ class RandomUsers extends Component
   /** @var array */
   public array $queryParams = [];
 
+  public bool $lazy = false;
+
   /**
    * Initialize random user data.
    *
@@ -168,6 +170,11 @@ class RandomUsers extends Component
   {
     $offset = ($this->page - 1) * $this->perPage;
     return array_slice($this->users, $offset, $this->perPage);
+  }
+
+  public function placeholder(array $params = []): string
+  {
+    return '<div class="skeleton">...</div>';
   }
 
   /**

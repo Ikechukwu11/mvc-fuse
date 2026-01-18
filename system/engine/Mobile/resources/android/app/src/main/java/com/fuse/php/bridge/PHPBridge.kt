@@ -12,7 +12,7 @@ import com.fuse.php.security.MobileCookieStore
 
 class PHPBridge(private val context: Context) {
     private var lastPostData: String? = null
-    private val requestDataMap = ConcurrentHashMap<String, String>()
+    private val requestDataMap = ConcurrentHashMap<String, RequestData>()
     private val phpExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
 
     private val nativePhpScript: String
@@ -22,7 +22,7 @@ class PHPBridge(private val context: Context) {
     external fun nativeSetEnv(name: String, value: String, overwrite: Int): Int
     external fun runRunnerCommand(command: String): String
     external fun initialize()
-    external fun setRequestInfo(method: String, uri: String, postData: String?)
+    external fun setRequestInfo(method: String, uri: String, postData: String?, contentType: String?)
     external fun getAppPublicPath(): String
     external fun getAppPath(): String
     external fun shutdown()
@@ -30,6 +30,7 @@ class PHPBridge(private val context: Context) {
         method: String,
         uri: String,
         postData: String?,
+        contentType: String?,
         scriptPath: String
     ): String
 
@@ -51,9 +52,17 @@ class PHPBridge(private val context: Context) {
         val future = phpExecutor.submit<String> {
             val prepStart = System.currentTimeMillis()
 
+            var contentType: String? = null
             request.headers.forEach { (key, value) ->
                 val envKey = "HTTP_" + key.replace("-", "_").uppercase()
                 nativeSetEnv(envKey, value, 1)
+                if (key.equals("Content-Type", ignoreCase = true)) {
+                    nativeSetEnv("CONTENT_TYPE", value, 1)
+                    contentType = value
+                }
+                if (key.equals("Content-Length", ignoreCase = true)) {
+                    nativeSetEnv("CONTENT_LENGTH", value, 1)
+                }
             }
 
             val cookieHeader = MobileCookieStore.asCookieHeader()
@@ -70,6 +79,7 @@ class PHPBridge(private val context: Context) {
                 request.method,
                 request.uri,
                 request.body,
+                contentType,
                 nativePhpScript
             )
 
@@ -91,12 +101,12 @@ class PHPBridge(private val context: Context) {
     }
 
     // New function to store request data with a key
-    fun storeRequestData(url: String, data: String) {
+    fun storeRequestData(url: String, data: String, headers: String? = null) {
         // Store by URL to ensure we get the correct body for the correct request
-        requestDataMap[url] = data
+        requestDataMap[url] = RequestData(data, headers)
         Log.d(TAG, "🔑 Stored request data for URL: $url (length=${data.length})")
 
-        // Also update last post data for backward compatibility
+        // Also update lastPostData for backward compatibility
         lastPostData = data
 
         // Clean up old requests occasionally
@@ -105,7 +115,7 @@ class PHPBridge(private val context: Context) {
         }
     }
 
-    fun getRequestData(url: String): String? {
+    fun getRequestData(url: String): RequestData? {
         // Try exact match first
         if (requestDataMap.containsKey(url)) {
             val data = requestDataMap[url]
@@ -122,7 +132,7 @@ class PHPBridge(private val context: Context) {
             return data
         }
 
-        return lastPostData
+        return if (lastPostData != null) RequestData(lastPostData!!, null) else null
     }
 
     // Clean up old request data
@@ -241,3 +251,5 @@ class PHPBridge(private val context: Context) {
     // All native bridge methods have been migrated to god method pattern
     // See BridgeFunctionRegistry.kt and bridge/functions/* for implementations
 }
+
+data class RequestData(val body: String, val headers: String?)

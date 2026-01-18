@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Fuse;
 
 use Engine\Fuse\Component;
@@ -28,7 +29,8 @@ class Counter extends Component
      */
     public function decrement()
     {
-        $this->count--;
+        if ($this->count > 0)
+            $this->count--;
     }
 
     /**

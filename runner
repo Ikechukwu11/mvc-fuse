@@ -145,6 +145,12 @@ PHP;
         }
 
         $pdo = \Engine\Database\DB::pdo();
+        $logger = new \Engine\Core\Logger();
+        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $dbPath = env('DB_DATABASE', '');
+        echo "Driver: $driver\n";
+        echo "Database: $dbPath\n";
+        $logger->info('migrate:start', ['driver' => $driver, 'database' => $dbPath, 'dir' => $dir]);
         $pdo->exec("CREATE TABLE IF NOT EXISTS migrations (id INTEGER PRIMARY KEY, migration TEXT, batch INTEGER)");
 
         $stmt = $pdo->query("SELECT migration FROM migrations");
@@ -172,13 +178,22 @@ PHP;
             $className = "Migration_" . $migration;
 
             echo "Migrating: $migration\n";
-            $instance = new $className();
-            $instance->up();
-
-            $pdo->prepare("INSERT INTO migrations (migration, batch) VALUES (?, ?)")->execute([$migration, 1]);
-            echo "Migrated:  $migration\n";
+            $logger->info('migrate:run', ['migration' => $migration]);
+            try {
+                $instance = new $className($pdo);
+                $instance->up();
+                $pdo->prepare("INSERT INTO migrations (migration, batch) VALUES (?, ?)")->execute([$migration, 1]);
+                echo "Migrated:  $migration\n";
+                $logger->info('migrate:done', ['migration' => $migration]);
+            } catch (\Throwable $e) {
+                echo "Migration failed: $migration\n";
+                echo "Error: " . $e->getMessage() . "\n";
+                $logger->error('migrate:error', ['migration' => $migration, 'error' => $e->getMessage()]);
+                throw $e;
+            }
         }
         echo "Done.\n";
+        $logger->info('migrate:end', []);
     },
     'storage:link' => function () use ($bootstrap) {
         $target = $bootstrap['paths']['root'] . '/storage/public';
@@ -226,9 +241,9 @@ PHP;
         }
 
         if (!$name) {
-             echo "Enter App Name (default: MVC Mobile): ";
-             $input = trim(fgets(STDIN));
-             $name = $input ?: 'MVC Mobile';
+            echo "Enter App Name (default: MVC Mobile): ";
+            $input = trim(fgets(STDIN));
+            $name = $input ?: 'MVC Mobile';
         }
 
         $installer = new \Engine\Mobile\Installer($bootstrap['paths']['root']);
@@ -332,6 +347,86 @@ PHP;
         // Launch on device
         $manager->launch();
     },
+    'mobile:logcat' => function (...$args) use ($bootstrap) {
+        require_once __DIR__ . '/system/engine/Mobile/Manager.php';
+        $manager = new \Engine\Mobile\Manager($bootstrap['paths']['root']);
+
+        $defaultTags = ['NativePHPLifecycle', 'Media', 'PHPMonitor', 'PHPMonitor-JS', 'PHPMonitor-Console', 'DeviceFunctions', 'NativeActionCoordinator', 'Permission', 'MainActivity', 'StatusBar', 'AndroidBridge'];
+        $package = $manager->getPackageName() ?? 'com.fuse.php';
+        $filter = null;
+        $tags = $defaultTags;
+        $extra = [];
+
+        foreach ($args as $arg) {
+            if (strpos($arg, '--pkg=') === 0) {
+                $package = substr($arg, 6);
+            } elseif (strpos($arg, '--appid=') === 0) {
+                $filter = substr($arg, 8);
+            } elseif (strpos($arg, '--tags=') === 0) {
+                $val = trim(substr($arg, 7));
+                if ($val !== '') {
+                    // support comma or space separated
+                    $tags = preg_split('/[\s,]+/', $val);
+                }
+            } else {
+                $extra[] = $arg;
+            }
+        }
+
+        // Resolve PID: prefer pidof, fallback to parsing ps -A
+        $pid = null;
+        $pidofCmd = "adb shell pidof -s " . escapeshellarg($package);
+        $pidOut = @shell_exec($pidofCmd);
+        if ($pidOut) {
+            $pidOut = trim($pidOut);
+            if ($pidOut !== '') {
+                $pid = $pidOut;
+            }
+        }
+        if (!$pid) {
+            $psOut = @shell_exec("adb shell ps -A");
+            if ($psOut) {
+                $lines = preg_split('/\r?\n/', $psOut);
+                foreach ($lines as $line) {
+                    if ($filter) {
+                        if (stripos($line, $filter) === false) continue;
+                    } else {
+                        if (stripos($line, $package) === false) continue;
+                    }
+                    // tokenise by whitespace
+                    $cols = preg_split('/\s+/', trim($line));
+                    // Try common layouts: PID often at index 1 or 2
+                    // Find numeric token that looks like PID
+                    foreach ($cols as $col) {
+                        if (ctype_digit($col)) {
+                            $pid = $col;
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!$pid) {
+            echo "Could not determine PID. Ensure app is running. Package: $package\n";
+            echo "Tip: You can specify --appid=substring or --pkg=com.example.app\n";
+            return;
+        }
+
+        $cmd = "adb logcat --pid " . escapeshellarg($pid) . " -v time";
+        if (!empty($tags)) {
+            $cmd .= " -s " . implode(' ', array_map('escapeshellarg', $tags));
+        }
+        if (!empty($extra)) {
+            $cmd .= " " . implode(' ', array_map('escapeshellarg', $extra));
+        }
+        $clearCmd = "adb logcat -c \n";
+        echo "Cleaning old logs";
+        passthru($clearCmd);
+
+        echo "Running: $cmd\n";
+        passthru($cmd);
+    },
 ];
 
 $argv = $_SERVER['argv'] ?? [];
@@ -371,4 +466,3 @@ if ($logFile) {
 
 echo "----------------\n";
 echo "Done.\n";
-

@@ -9,6 +9,7 @@ use Engine\Fuse\Component;
  */
 class Pagination extends Component
 {
+    public bool $lazy = false;
     /**
      * Render Pagination docs with a live demo.
      *
@@ -18,36 +19,37 @@ class Pagination extends Component
     {
         $demo = fuse(\App\Fuse\RandomUsers::class);
 
-        $componentExample = <<<'PHP'
-class RandomUsers extends Component {
-    public array $users = [];
-    public int $page = 1;
-    public int $perPage = 5;
+        $componentExample =
+            <<<'PHP'
+            class RandomUsers extends Component {
+                public array $users = [];
+                public int $page = 1;
+                public int $perPage = 5;
 
-    public function mount() {
-        // Build $users with custom/random data
-    }
-    public function prev() { $this->page = max(1, $this->page - 1); }
-    public function next() { $this->page = min($this->pages(), $this->page + 1); }
-    public function go(int $p) { $this->page = max(1, min($this->pages(), $p)); }
-    public function pages(): int { return max(1, (int)ceil(count($this->users)/$this->perPage)); }
-    public function currentSlice(): array {
-        $offset = ($this->page - 1) * $this->perPage;
-        return array_slice($this->users, $offset, $this->perPage);
-    }
-}
-PHP;
+                public function mount() {
+                    // Build $users with custom/random data
+                }
+                public function prev() { $this->page = max(1, $this->page - 1); }
+                public function next() { $this->page = min($this->pages(), $this->page + 1); }
+                public function go(int $p) { $this->page = max(1, min($this->pages(), $p)); }
+                public function pages(): int { return max(1, (int)ceil(count($this->users)/$this->perPage)); }
+                public function currentSlice(): array {
+                    $offset = ($this->page - 1) * $this->perPage;
+                    return array_slice($this->users, $offset, $this->perPage);
+                }
+            }
+            PHP;
 
         $usageExample = <<<'HTML'
-<div>
-  <div fuse:loading-target=".loading-indicator" style="display:flex; gap:8px; align-items:center;">
-    <span class="loading-indicator" style="display:none;">Loading…</span>
-    <button fuse:click="pagePrev">Prev</button>
-    <!-- page links -->
-    <button fuse:click="pageNext">Next</button>
-  </div>
-</div>
-HTML;
+    <div>
+    <div fuse:loading-target=".loading-indicator" style="display:flex; gap:8px; align-items:center;">
+        <span class="loading-indicator" style="display:none;">Loading…</span>
+        <button fuse:click="pagePrev">Prev</button>
+        <!-- page links -->
+        <button fuse:click="pageNext">Next</button>
+    </div>
+    </div>
+    HTML;
 
         return <<<HTML
         <div>

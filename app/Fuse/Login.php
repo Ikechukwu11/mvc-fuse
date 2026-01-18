@@ -4,13 +4,15 @@ namespace App\Fuse;
 
 use Engine\Fuse\Component;
 use App\Models\User;
+use Native\Mobile\Facades\Dialog;
+use Native\Mobile\Facades\Device;
 
 /**
  * Login Component
  *
  * Handles user authentication via Fuse.
  */
-class Login extends Component
+class Login extends BaseFuse
 {
     /**
      * @var string User email input
@@ -47,10 +49,16 @@ class Login extends Component
 
         if ($user && password_verify($this->password, $user->password)) {
             session_put('user_id', $user->id);
+            // Dispatch success toast to native app
+            Dialog::toast('Login successful!');
+            Device::vibrate(50);
+
             // Redirect using the new redirect helper
             $this->redirect(route('/fuse/profile'));
         } else {
             $this->message = 'Invalid credentials.';
+            // Dispatch error toast to native app
+            Dialog::toast('Invalid credentials');
         }
     }
 
